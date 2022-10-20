@@ -4,8 +4,8 @@
 class mariadb_galera::repo {
 
   apt::key { 'mariadb':
-    id     => '199369E5404BD5FC7D2FE43BCBCB082A1BB943DB',
-    source => 'https://supplychain.mariadb.com/MariaDB-Server-GPG-KEY'
+    id     => 'CE1A3DD5E3C94F49',
+    #source => 'https://supplychain.mariadb.com/MariaDB-Server-GPG-KEY'
   }
 
   apt::source {
