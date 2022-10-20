@@ -3,7 +3,7 @@
 wsrep_on                 = ON
 wsrep_provider           = /usr/lib/galera/libgalera_smm.so
 wsrep_cluster_name       = "MariaDB Galera Cluster"
-wsrep_cluster_address    = "gcomm://<%= $galera_ips_string %>"
+wsrep_cluster_address    = "gcomm://<%= $galera_ips_v4_string %>"
 binlog_format            = row
 default_storage_engine   = InnoDB
 innodb_autoinc_lock_mode = 2
