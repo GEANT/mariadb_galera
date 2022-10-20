@@ -2,11 +2,11 @@
 #
 #
 class mariadb_galera::files (
-  $galera_ips_v4_string    = $poc::params::galera_ips_v4_string,
-  $galera_ips_v4           = $poc::params::galera_ips_v4,
-  $my_ip                   = $poc::params::my_ip,
-  $galera_ips_v4_separated =  $poc::params::galera_ips_v4_separated,
-  #$cloud_db_password       = $poc::params::cloud_db_password
+  $galera_ips_v4_string    = $mariadb_galera::params::galera_ips_v4_string,
+  $galera_ips_v4           = $mariadb_galera::params::galera_ips_v4,
+  $my_ip                   = $mariadb_galera::params::my_ip,
+  $galera_ips_v4_separated = $mariadb_galera::params::galera_ips_v4_separated,
+  #$cloud_db_password       = $mariadb_galera::params::cloud_db_password
 ) {
 
   file {
