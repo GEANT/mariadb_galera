@@ -16,7 +16,7 @@ class mariadb_galera::services {
     log_on_failure => 'HOST',
     require        => File[
       '/root/.my.cnf',
-      '/etc/sysconfig/clustercheck',
+      '/etc/default/clustercheck',
       '/usr/bin/clustercheck'
     ];
   }

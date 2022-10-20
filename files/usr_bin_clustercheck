@@ -16,7 +16,7 @@ if [[ $1 == '-h' || $1 == '--help' ]];then
     exit
 fi
 
-source /etc/sysconfig/clustercheck
+source /etc/default/clustercheck
 #MYSQL_USERNAME="${1-clustercheckuser}"
 #MYSQL_PASSWORD="${2-clustercheckpassword!}"
 AVAILABLE_WHEN_DONOR=${3:-0}
