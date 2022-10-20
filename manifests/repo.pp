@@ -13,7 +13,7 @@ class mariadb_galera::repo {
   apt::source {
     default:
       include      => {
-        'src' => true,
+        'src' => false,
         'deb' => true,
       },
       architecture => $facts['architecture'],
