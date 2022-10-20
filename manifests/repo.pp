@@ -10,13 +10,13 @@ class mariadb_galera::repo {
 
   apt::source {
     default:
-      include => {
+      include      => {
         'src' => true,
         'deb' => true,
       },
-      arch    => $facts['architecture'],
-      notify  => Exec['apt_update'],
-      require => Apt::Key['mariadb'];
+      architecture => $facts['architecture'],
+      notify       => Exec['apt_update'],
+      require      => Apt::Key['mariadb'];
     'mariadb-server':
       location => 'https://dlm.mariadb.com/repo/mariadb-server/10.9/repo/ubuntu',
       release  => $facts['lsbdistcodename'],
