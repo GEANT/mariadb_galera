@@ -12,13 +12,15 @@ class mariadb_galera::files (
   file {
     '/etc/mysql/mariadb.conf.d/60-galera.cnf':
       #notify  => Service['mariadb'],
+      require => Package['mariadb-server'],
       content => epp("${module_name}/60-galera.cnf.epp", {
         galera_ips_string => $galera_ips_v4_string,
         my_ip             => $my_ip
       });
     '/etc/mysql/mariadb.cnf':
       #notify => Service['mariadb'],
-      source => "puppet:///modules/${module_name}/mariadb.cnf";
+      require => Package['mariadb-server'],
+      source  => "puppet:///modules/${module_name}/mariadb.cnf";
     #'/root/.my.cnf':
     #  owner   => root,
     #  group   => root,
