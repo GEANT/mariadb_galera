@@ -2,7 +2,7 @@
 #
 #
 class mariadb_galera (
-  $root_password = $mariadb_galera::root_password
+  # $root_password = $mariadb_galera::root_password
 ) inherits mariadb_galera::params {
 
   include mariadb_galera::repo
