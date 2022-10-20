@@ -8,7 +8,7 @@ class mariadb_galera (
   include mariadb_galera::repo
   include mariadb_galera::install
   include mariadb_galera::files
-  include mariadb_galera::service
+  include mariadb_galera::services
 
   #mariadb_galera::create::root_password { 'root':
   #  root_password => $root_password,
