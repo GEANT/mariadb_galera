@@ -21,4 +21,11 @@ class mariadb_galera::services {
     ];
   }
 
+  service { 'mariadb':
+    ensure    => running,
+    hasstatus => true,
+    enable    => true,
+    require   => Package['mariadb-server'];
+  }
+
 }
