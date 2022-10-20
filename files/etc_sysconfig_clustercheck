@@ -1,0 +1,4 @@
+# Cluster Check
+MYSQL_USERNAME="haproxy"
+MYSQL_HOST="localhost"
+MYSQL_PORT="3306"

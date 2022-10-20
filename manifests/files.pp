@@ -10,6 +10,11 @@ class mariadb_galera::files (
 ) {
 
   file {
+    '/etc/sysconfig/clustercheck':
+      source => "puppet:///modules/${module_name}/etc_sysconfig_clustercheck";
+    '/usr/bin/clustercheck':
+      mode   => '0755',
+      source => "puppet:///modules/${module_name}/usr_bin_clustercheck";
     '/etc/mysql/mariadb.conf.d/60-galera.cnf':
       #notify  => Service['mariadb'],
       require => Package['mariadb-server'],
