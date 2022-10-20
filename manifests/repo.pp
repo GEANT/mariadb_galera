@@ -7,7 +7,7 @@ class mariadb_galera::repo {
     'mariadb-server':
       id => '4C470FFFEFC4D3DC59778655CE1A3DD5E3C94F49';
     'mariadb-tools':
-      id => 'F1656F24C74CD1D8';
+      id => '177F4010FE56CA3336300305F1656F24C74CD1D8';
   }
 
   apt::source {
