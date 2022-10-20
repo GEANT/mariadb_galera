@@ -17,7 +17,7 @@ class mariadb_galera::files (
         my_ip             => $my_ip
       });
     '/etc/mysql/mariadb.cnf':
-      notify => Service['mariadb'],
+      #notify => Service['mariadb'],
       source => "puppet:///modules/${module_name}/mariadb.cnf";
     #'/root/.my.cnf':
     #  owner   => root,
