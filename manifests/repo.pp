@@ -1,4 +1,4 @@
-# == Class: mariadb_galera
+# == Class: mariadb_galera::repo
 #
 #
 class mariadb_galera::repo {
