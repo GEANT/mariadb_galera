@@ -14,8 +14,8 @@ class mariadb_galera::files (
       #notify  => Service['mariadb'],
       require => Package['mariadb-server'],
       content => epp("${module_name}/60-galera.cnf.epp", {
-        galera_ips_string => $galera_ips_v4_string,
-        my_ip             => $my_ip
+        galera_ips_v4_string => $galera_ips_v4_string,
+        my_ip                => $my_ip
       });
     '/etc/mysql/mariadb.cnf':
       #notify => Service['mariadb'],
