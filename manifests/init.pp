@@ -2,5 +2,7 @@
 #
 #
 class mariadb_galera {
-  # resources
+
+  include mariadb_galera::repo
+
 }
