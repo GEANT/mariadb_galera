@@ -21,7 +21,7 @@ class mariadb_galera::files (
     '/usr/bin/clustercheck':
       mode   => '0755',
       source => "puppet:///modules/${module_name}/usr_bin_clustercheck";
-    '/etc/mysql/mariadb.conf.d/50-server.cnf.cnf':
+    '/etc/mysql/mariadb.conf.d/50-server.cnf':
       notify  => Service['mariadb'],
       require => Package['mariadb-server'],
       content => epp("${module_name}/50-galera.cnf.epp", {
