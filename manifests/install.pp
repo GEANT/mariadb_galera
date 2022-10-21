@@ -5,6 +5,10 @@ class mariadb_galera::install (
   $mariadb_packages = $mariadb_galera::params::mariadb_packages
 ) {
 
+  class { 'mysql::client':
+    package_manage  => undef,
+    bindings_enable => undef
+  }
   package { 'mysql_client':
     ensure  => present,
     name    => 'mariadb',
