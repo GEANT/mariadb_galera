@@ -3,8 +3,6 @@
 #
 class mariadb_galera::params {
 
-  $mariadb_packages = ['mariadb', 'mariadb-server']
-
   $server_hash = puppetdb_query("inventory[facts.ipaddress, facts.ipaddress6] {facts.hostname ~ 'mariadb-galera' and facts.agent_specified_environment = '${::environment}'}")
   $galera_ips_v6 = sort($server_hash.map | $k, $v | {$v['facts.ipaddress6'] })
   $galera_ips_v4 = sort($server_hash.map | $k, $v | {$v['facts.ipaddress'] })

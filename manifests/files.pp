@@ -37,8 +37,8 @@ class mariadb_galera::files (
         my_ip                => $my_ip
       });
     '/etc/mysql/mariadb.cnf':
-      notify  => Service['mariadb'],
-      source  => "puppet:///modules/${module_name}/mariadb.cnf";
+      notify => Service['mariadb'],
+      source => "puppet:///modules/${module_name}/mariadb.cnf";
   }
 
 }

@@ -3,7 +3,6 @@
 #
 class mariadb_galera (
   Sensitive $root_password         = $mariadb_galera::params::root_password,
-  $mariadb_packages                = $mariadb_galera::params::mariadb_packages,
 
   # Innodb Options
   $innodb_buffer_pool_size_percent = $mariadb_galera::params::innodb_buffer_pool_size_percent,
