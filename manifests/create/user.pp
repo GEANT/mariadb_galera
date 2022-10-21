@@ -33,7 +33,6 @@ define mariadb_galera::create::user (
   $schema_array_no_stars = $schema_name.filter |$item| { $item != '*' }
 
   $schema_array_no_stars.each | $myschema | {
-      echo { "test ${myschema}": }
     unless defined(Mysql::Db[$myschema]) {
       mysql::db { $myschema:
         ensure   => $ensure_schema,
