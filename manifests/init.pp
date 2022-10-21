@@ -17,8 +17,9 @@ class mariadb_galera (
   }
 
   $nomad_server_hash = puppetdb_query(
-    "inventory[facts.fqdn] {facts.hostname ~ 'nomad0\d' and facts.agent_specified_environment = '${::environment}'}")
+    "inventory[facts.fqdn] {facts.hostname ~ 'nomad0' and facts.agent_specified_environment = '${::environment}'}")
   $nomad_server = sort($nomad_server_hash.map | $k, $v | {$v['facts.fqdn'] })
+
   echo { "test ${nomad_server}": }
 
 }
