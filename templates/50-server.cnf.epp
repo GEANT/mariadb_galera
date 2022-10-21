@@ -98,7 +98,7 @@ default_storage_engine          = InnoDB
 innodb-buffer-pool-size         = <%= $buf_pool_size %>M
 innodb-flush-log-at-trx-commit  = 2
 innodb-file-per-table           = 1
-innodb-data-file-path           = ibdata1:100M:autoextend
+#innodb-data-file-path           = ibdata1:100M:autoextend
 innodb-read-io-threads          = 4
 innodb-write-io-threads         = 4
 innodb-doublewrite              = 1 # enabled innodb_doublewrite unless we use ZFS
