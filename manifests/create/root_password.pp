@@ -23,7 +23,7 @@ define mariadb_galera::create::root_password (
 
   # privileges ALL isn't working well with puppetlabs/mysql module on Percona 8
   # we use a function to apply a workaround (until the fix comes)
-  $root_privileges = mariadb_galera::root_privileges_workaround(['ALL'])
+  #$root_privileges = mariadb_galera::root_privileges_workaround(['ALL'])
 
   file {
     default:
@@ -61,7 +61,7 @@ define mariadb_galera::create::root_password (
       ensure     => present,
       user       => "root@${local_host}",
       table      => '*.*',
-      privileges => $root_privileges,
+      privileges => ['ALL'],
       require    => File[$root_cnf];
     }
   }
