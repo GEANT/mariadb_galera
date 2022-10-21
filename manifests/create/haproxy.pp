@@ -3,7 +3,7 @@
 #
 class mariadb_galera::create::haproxy {
 
-  echo { 'bofh': }
+  echo { "bofh ${sql_file}": }
 
   $sql_file = "CREATE USER haproxy@'%';\nGRANT PROCESS ON *.* TO 'haproxy'@'%';\nFLUSH PRIVILEGES;\n"
 
