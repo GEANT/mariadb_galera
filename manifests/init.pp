@@ -21,6 +21,7 @@ class mariadb_galera (
   include mariadb_galera::consul
 
   class { 'mariadb_galera::files':
+    custom_server_cnf_parameters    => $custom_server_cnf_parameters,
     innodb_buffer_pool_size_percent => $innodb_buffer_pool_size_percent,
     innodb_buffer_pool_instances    => $innodb_buffer_pool_instances,
     innodb_flush_method             => $innodb_flush_method,
