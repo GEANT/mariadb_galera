@@ -10,7 +10,7 @@ define mariadb_galera::create::user (
   $dbuser                       = $name,
   $force_schema_removal         = false,  # do not drop DB if a user is removed
   Enum['present', 'absent', present, absent] $ensure = present,
-  Array[Stdlib::IP::Address, Stdlib::Fqdn] $trusted_sources = []
+  Optional[Array[Variant[Stdlib::IP::Address, Stdlib::Fqdn]]] $trusted_sources = []
 ) {
 
   $galera_ips = $galera_ipv4 + $galera_ipv6
