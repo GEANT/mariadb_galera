@@ -10,7 +10,9 @@ define mariadb_galera::create::user (
   $dbuser                       = $name,
   $force_schema_removal         = false,  # do not drop DB if a user is removed
   Enum['present', 'absent', present, absent] $ensure = present,
-  Optional[Array[Variant[Stdlib::IP::Address, Stdlib::Fqdn]]] $trusted_sources = []
+  Optional[Array[Variant[Stdlib::IP::Address, Stdlib::Fqdn]]] $trusted_sources = [],
+  $collate = 'utf8mb3_bin',
+  $charset = 'utf8mb3'
 ) {
 
   $galera_ips = $galera_ipv4 + $galera_ipv6
@@ -38,8 +40,8 @@ define mariadb_galera::create::user (
         user     => $dbuser,
         password => $dbpass.unwrap,
         grant    => $privileges,
-        charset  => 'utf8',
-        collate  => 'utf8_bin';
+        charset  => $charset,
+        collate  => $collate;
       }
     }
   }
