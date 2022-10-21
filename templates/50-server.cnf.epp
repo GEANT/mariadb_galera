@@ -104,9 +104,6 @@ innodb-write-io-threads         = 4
 innodb-doublewrite              = 1 # enabled innodb_doublewrite unless we use ZFS
 innodb-log-file-size            = <%= $innodb_log_file_size %>
 innodb-log-buffer-size          = 8M
-innodb-buffer-pool-instances    = <%= $innodb_buffer_pool_instances %>
-innodb-log-files-in-group       = 2
-innodb-thread-concurrency       = 0
 innodb-flush-method             = <%= $innodb_flush_method %>
 innodb_autoinc_lock_mode        = 2
 innodb-stats-on-metadata        = 0 # avoid statistics update when doing e.g show tables

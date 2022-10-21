@@ -16,7 +16,6 @@ class mariadb_galera::params {
   # == mysqld options
   #
   $innodb_buffer_pool_size_percent = '0.7'
-  $innodb_buffer_pool_instances = floor(Float.new($facts['memorysize_mb']) * Float.new(0.7)/130)
   $innodb_flush_method = 'O_DIRECT'
   $innodb_log_file_size = '512M'
   $max_connections = 1024

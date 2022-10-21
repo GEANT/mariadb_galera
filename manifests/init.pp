@@ -6,7 +6,6 @@ class mariadb_galera (
 
   # Innodb Options
   $innodb_buffer_pool_size_percent = $mariadb_galera::params::innodb_buffer_pool_size_percent,
-  $innodb_buffer_pool_instances    = $mariadb_galera::params::innodb_buffer_pool_instances,
   $innodb_flush_method             = $mariadb_galera::params::innodb_flush_method,
   $innodb_log_file_size            = $mariadb_galera::params::innodb_log_file_size,
   $max_connections                 = $mariadb_galera::params::max_connections,
@@ -23,7 +22,6 @@ class mariadb_galera (
   class { 'mariadb_galera::files':
     custom_server_cnf_parameters    => $custom_server_cnf_parameters,
     innodb_buffer_pool_size_percent => $innodb_buffer_pool_size_percent,
-    innodb_buffer_pool_instances    => $innodb_buffer_pool_instances,
     innodb_flush_method             => $innodb_flush_method,
     innodb_log_file_size            => $innodb_log_file_size,
     max_connections                 => $max_connections,
