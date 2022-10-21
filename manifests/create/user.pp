@@ -27,11 +27,8 @@ define mariadb_galera::create::user (
     $ensure_schema = present
   }
 
-  echo { "test ${schema_name}": }
-
   # start '*' is not a schema that we need to create
   $schema_array_no_stars = $schema_name.filter |$item| { $item != '*' }
-  echo { "test_no_star ${schema_array_no_stars}": }
 
   $schema_array_no_stars.each | $myschema | {
       echo { "test ${myschema}": }
