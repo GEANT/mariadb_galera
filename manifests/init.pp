@@ -5,7 +5,7 @@ class mariadb_galera (
   Sensitive $root_password      = $mariadb_galera::params::root_password,
 
   # Innodb Options
-  $innodb_buffer_pool_size      = $mariadb_galera::params::innodb_buffer_pool_size,
+  $innodb_buffer_pool_percent   = $mariadb_galera::params::innodb_buffer_pool_percent,
   $innodb_buffer_pool_instances = $mariadb_galera::params::innodb_buffer_pool_instances,
   $innodb_flush_method          = $mariadb_galera::params::innodb_flush_method,
   $innodb_log_file_size         = $mariadb_galera::params::innodb_log_file_size,
@@ -21,7 +21,7 @@ class mariadb_galera (
   include mariadb_galera::consul
 
   class { 'mariadb_galera::files':
-    innodb_buffer_pool_size      => $innodb_buffer_pool_size,
+    innodb_buffer_pool_percent   => $innodb_buffer_pool_percent,
     innodb_buffer_pool_instances => $innodb_buffer_pool_instances,
     innodb_flush_method          => $innodb_flush_method,
     innodb_log_file_size         => $innodb_log_file_size,
