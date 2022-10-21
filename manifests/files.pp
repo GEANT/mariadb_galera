@@ -26,7 +26,6 @@ class mariadb_galera::files (
       require => Package['mariadb-server'],
       content => epp("${module_name}/50-server.cnf.epp", {
         innodb_buffer_pool_size_percent => $innodb_buffer_pool_size_percent,
-        innodb_buffer_pool_instances    => $innodb_buffer_pool_instances,
         innodb_flush_method             => $innodb_flush_method,
         innodb_log_file_size            => $innodb_log_file_size,
         max_connections                 => $max_connections
