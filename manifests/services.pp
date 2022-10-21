@@ -26,7 +26,7 @@ class mariadb_galera::services (
     ensure    => running,
     hasstatus => true,
     enable    => true,
-    require   => Package[$mariadb_packages];
+    require   => Package['mysql-server'];
   }
 
 }

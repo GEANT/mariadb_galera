@@ -15,6 +15,8 @@ class mariadb_galera::files (
 ) {
 
   file {
+    default:
+      require => Package['mysql-server'];
     '/etc/default/clustercheck':
       source => "puppet:///modules/${module_name}/etc_default_clustercheck";
     '/usr/bin/clustercheck':
@@ -22,7 +24,6 @@ class mariadb_galera::files (
       source => "puppet:///modules/${module_name}/usr_bin_clustercheck";
     '/etc/mysql/mariadb.conf.d/50-server.cnf':
       notify  => Service['mariadb'],
-      require => Package['mariadb-server'],
       content => epp("${module_name}/50-server.cnf.epp", {
         innodb_buffer_pool_size_percent => $innodb_buffer_pool_size_percent,
         innodb_flush_method             => $innodb_flush_method,
@@ -31,14 +32,12 @@ class mariadb_galera::files (
       });
     '/etc/mysql/mariadb.conf.d/60-galera.cnf':
       notify  => Service['mariadb'],
-      require => Package['mariadb-server'],
       content => epp("${module_name}/60-galera.cnf.epp", {
         galera_ips_v4_string => $galera_ips_v4_string,
         my_ip                => $my_ip
       });
     '/etc/mysql/mariadb.cnf':
       notify  => Service['mariadb'],
-      require => Package['mariadb-server'],
       source  => "puppet:///modules/${module_name}/mariadb.cnf";
   }
 
