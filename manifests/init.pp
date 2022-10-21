@@ -11,10 +11,10 @@ class mariadb_galera (
   include mariadb_galera::services
   include mariadb_galera::consul
 
-  mariadb_galera::create::root_password { 'root':
-    root_password => Sensitive($root_password),
-    force_ipv6    => true,
-    require       => Class['mariadb_galera::install'];
-  }
+  #mariadb_galera::create::root_password { 'root':
+  #  root_password => Sensitive($root_password),
+  #  force_ipv6    => true,
+  #  require       => Class['mariadb_galera::install'];
+  #}
 
 }
