@@ -13,11 +13,11 @@ class mariadb_galera::install (
     package_manage  => false,
   }
 
-  class { 'mysql::client':
-    package_name    => 'mariadb-client',
-    package_ensure  => '1:10.3.21+maria~xenial',
-    bindings_enable => false,
-  }
+  #class { 'mysql::client':
+  #  package_name    => 'mariadb-client',
+  #  package_ensure  => present,
+  #  bindings_enable => false,
+  #}
 
   package { ['mariadb-client', 'mysql-server']:
     ensure  => present,
