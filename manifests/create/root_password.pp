@@ -10,7 +10,7 @@
 #
 #
 define mariadb_galera::create::root_password (
-  Sensitive $root_pass,
+  Sensitive $root_password,
   Boolean $force_ipv6
 ) {
 
@@ -31,14 +31,14 @@ define mariadb_galera::create::root_password (
       require => File['/root/bin'];
     '/root/bin/pw_change.sh':
       content => Sensitive(epp("${module_name}/root_pw/pw_change.sh.epp", {
-        'root_cnf'  => $root_cnf,
-        'root_pass' => Sensitive($root_pass),
+        'root_cnf'      => $root_cnf,
+        'root_password' => Sensitive($root_password),
       }));
     '/root/bin/old_pw_check.sh':
       content => epp("${module_name}/root_pw/old_pw_check.sh.epp", { 'root_cnf' => $root_cnf });
     '/root/bin/new_pw_check.sh':
       content => Sensitive(epp("${module_name}/root_pw/new_pw_check.sh.epp", {
-        'root_pass' => Sensitive($root_pass)
+        'root_password' => Sensitive($root_password)
       }));
   }
 
