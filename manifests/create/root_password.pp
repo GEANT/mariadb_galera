@@ -11,7 +11,7 @@
 #
 define mariadb_galera::create::root_password (
   Sensitive $root_password,
-  Boolean $force_ipv6
+  Boolean $force_ipv6 = false
 ) {
 
   $root_cnf = '/root/.my.cnf'
