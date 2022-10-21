@@ -3,7 +3,9 @@
 # This Class manages services
 #
 #
-class mariadb_galera::services {
+class mariadb_galera::services (
+  $mariadb_packages = $mariadb_galera::params::mariadb_packages
+) {
 
   xinetd::service { 'galerachk':
     server         => '/usr/bin/clustercheck',
@@ -17,7 +19,6 @@ class mariadb_galera::services {
     require        => File[
       '/etc/default/clustercheck',
       '/usr/bin/clustercheck',
-      #'/root/.my.cnf'
     ];
   }
 
@@ -25,7 +26,7 @@ class mariadb_galera::services {
     ensure    => running,
     hasstatus => true,
     enable    => true,
-    require   => Package['mariadb-server'];
+    require   => Package[$mariadb_packages];
   }
 
 }

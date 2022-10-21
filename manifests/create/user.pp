@@ -40,7 +40,8 @@ define mariadb_galera::create::user (
         password => $dbpass.unwrap,
         grant    => $privileges,
         charset  => $charset,
-        collate  => $collate;
+        collate  => $collate,
+        require  => Service['mariadb'];
       }
     }
   }

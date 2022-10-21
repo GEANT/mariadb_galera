@@ -3,6 +3,7 @@
 #
 class mariadb_galera (
   Sensitive $root_password         = $mariadb_galera::params::root_password,
+  $mariadb_packages                = $mariadb_galera::params::mariadb_packages,
 
   # Innodb Options
   $innodb_buffer_pool_size_percent = $mariadb_galera::params::innodb_buffer_pool_size_percent,
@@ -15,13 +16,9 @@ class mariadb_galera (
 ) inherits mariadb_galera::params {
 
   include mariadb_galera::repo
+  include mariadb_galera::install
   include mariadb_galera::services
   include mariadb_galera::consul
-
-  package { 'mariadb-server':
-    ensure  => present,
-    require => [Exec['apt_update'], Apt::Source['mariadb-server']];
-  }
 
   class { 'mariadb_galera::files':
     custom_server_cnf_parameters    => $custom_server_cnf_parameters,
