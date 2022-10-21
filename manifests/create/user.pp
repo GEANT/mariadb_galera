@@ -1,7 +1,7 @@
-# == Define: galera_proxysql::create::user
+# == Define: mariadb_galera::create::user
 #
 #
-define galera_proxysql::create::user (
+define mariadb_galera::create::user (
   Sensitive $dbpass,
   $galera_ipv4,
   $galera_ipv6                  = [],
