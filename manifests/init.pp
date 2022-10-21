@@ -34,7 +34,7 @@ class mariadb_galera (
 
   mariadb_galera::create::root_password { 'root':
     root_password => Sensitive($root_password),
-    require       => Class['mariadb_galera::install'];
+    require       => Package['mariadb-server'];
   }
 
 }
