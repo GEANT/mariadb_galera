@@ -6,21 +6,13 @@ class mariadb_galera::install (
 ) {
 
   class { 'mysql::client':
-    package_manage  => undef,
-    bindings_enable => undef
-  }
-  package { 'mariadb-client':
-    ensure  => present,
-    require => [Exec['apt_update'], Apt::Source['mariadb-server']];
-    #provider        => $mysql::client::package_provider,
-    #source          => $mysql::client::package_source,
+    package_manage  => false,
+    bindings_enable => false
   }
 
-  package { 'mysql-server':
+  package { ['mariadb-client', 'mysql-server']:
     ensure  => present,
-    name    => 'mariadb-server',
     require => [Exec['apt_update'], Apt::Source['mariadb-server']];
   }
-
 
 }
