@@ -16,4 +16,7 @@ class mariadb_galera (
     require       => Class['mariadb_galera::install'];
   }
 
+  $nomad_server = puppetdb_query("inventory[facts.fqdn] {facts.hostname ~ 'nomad' and facts.agent_specified_environment = '${::environment}'}")
+  echo { "test ${nomad_server}": }
+
 }
