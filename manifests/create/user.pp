@@ -36,7 +36,10 @@ define mariadb_galera::create::user (
   # start '*' is not a schema that we need to create
   $schema_array_no_stars = $schema_array.filter |$item| { $item =~ Undef }
 
+  echo { "test ${schema_array_no_stars}": }
+
   $schema_array_no_stars.each | $myschema | {
+      echo { "test ${myschema}": }
     unless defined(Mysql::Db[$myschema]) {
       mysql::db { $myschema:
         ensure   => $ensure_schema,
