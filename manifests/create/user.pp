@@ -69,7 +69,7 @@ define mariadb_galera::create::user (
       }
     }
 
-    $translated_trusted_sources = unique(flatte($_translated_trusted_sources))
+    $translated_trusted_sources = unique(flatten($_translated_trusted_sources))
 
     $translated_trusted_sources.each | $item | {
       mysql_user { "${dbuser}@${item}":
