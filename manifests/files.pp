@@ -2,7 +2,7 @@
 #
 #
 class mariadb_galera::files (
-  $innodb_buffer_pool_percent,
+  $innodb_buffer_pool_size_percent,
   $innodb_buffer_pool_instances,
   $innodb_flush_method,
   $innodb_log_file_size,
@@ -25,11 +25,11 @@ class mariadb_galera::files (
       notify  => Service['mariadb'],
       require => Package['mariadb-server'],
       content => epp("${module_name}/50-galera.cnf.epp", {
-        innodb_buffer_pool_percent   => $innodb_buffer_pool_percent,
-        innodb_buffer_pool_instances => $innodb_buffer_pool_instances,
-        innodb_flush_method          => $innodb_flush_method,
-        innodb_log_file_size         => $innodb_log_file_size,
-        max_connections              => $max_connections
+        innodb_buffer_pool_size_percent => $innodb_buffer_pool_size_percent,
+        innodb_buffer_pool_instances    => $innodb_buffer_pool_instances,
+        innodb_flush_method             => $innodb_flush_method,
+        innodb_log_file_size            => $innodb_log_file_size,
+        max_connections                 => $max_connections
       });
     '/etc/mysql/mariadb.conf.d/60-galera.cnf':
       notify  => Service['mariadb'],

@@ -93,7 +93,7 @@ collation-server      = utf8mb4_general_ci
 #
 # * InnoDB
 #
-<% $buf_pool_size = floor(Float.new($facts['memorysize_mb']) * Float.new($innodb_buffer_pool_percent)) -%>
+<% $buf_pool_size = floor(Float.new($facts['memorysize_mb']) * Float.new($innodb_buffer_pool_size_percent)) -%>
 default_storage_engine          = InnoDB
 innodb-buffer-pool-size         = <%= $buf_pool_size %>M
 innodb-flush-log-at-trx-commit  = 2
