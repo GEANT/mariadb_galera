@@ -3,7 +3,6 @@
 #
 class mariadb_galera::files (
   $innodb_buffer_pool_size_percent,
-  $innodb_buffer_pool_instances,
   $innodb_flush_method,
   $innodb_log_file_size,
   $max_connections,
