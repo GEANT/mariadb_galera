@@ -72,12 +72,4 @@ define mariadb_galera::create::root_password (
     }
   }
 
-  mysql_grant { 'mysql.session@localhost/performance_schema.*':
-    ensure     => present,
-    user       => 'mysql.session@localhost',
-    table      => 'performance_schema.*',
-    privileges => 'SELECT',
-    require    => File[$root_cnf];
-  }
-
 }
