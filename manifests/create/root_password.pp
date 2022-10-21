@@ -16,9 +16,9 @@ define mariadb_galera::create::root_password (
 
   $root_cnf = '/root/.my.cnf'
   if ($force_ipv6) {
-    $root_host_list = ['127.0.0.1', 'localhost', '::1']
+    $root_host_list = ['localhost', '::1']
   } else {
-    $root_host_list = ['127.0.0.1', 'localhost']
+    $root_host_list = ['localhost']
   }
 
   # privileges ALL isn't working well with puppetlabs/mysql module on Percona 8
@@ -31,7 +31,7 @@ define mariadb_galera::create::root_password (
       owner   => root,
       group   => root,
       require => File['/root/bin'];
-    '/root/.my.cnf':
+    $root_cnf:
       mode    => '0660',
       notify  => Xinetd::Service['galerachk'],
       content => Sensitive("[client]\nuser=root\npassword=${root_password.unwrap}\n");

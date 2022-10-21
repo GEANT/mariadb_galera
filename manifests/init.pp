@@ -13,7 +13,6 @@ class mariadb_galera (
 
   mariadb_galera::create::root_password { 'root':
     root_password => Sensitive($root_password),
-    force_ipv6    => true,
     require       => Class['mariadb_galera::install'];
   }
 
