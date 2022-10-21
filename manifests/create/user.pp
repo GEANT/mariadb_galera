@@ -16,7 +16,7 @@ define mariadb_galera::create::user (
   $galera_ips = $galera_ipv4 + $galera_ipv6
 
   if $table =~ String {
-    $schema_name = split($table, '[.]')[0]
+    $schema_name = [split($table, '[.]')[0]]
   } else {
     $schema_name = $table.map |$item| {split($item, '[.]')[0]}
   }
@@ -27,14 +27,8 @@ define mariadb_galera::create::user (
     $ensure_schema = present
   }
 
-  if $schema_name =~ Array {
-    $schema_array = $schema_name
-  } else {
-    $schema_array = [$schema_name]
-  }
-
   # start '*' is not a schema that we need to create
-  $schema_array_no_stars = $schema_array.filter |$item| { $item =~ Undef }
+  $schema_array_no_stars = $schema_name.filter |$item| { $item =~ Undef }
 
   echo { "test ${schema_array_no_stars}": }
 
