@@ -28,7 +28,13 @@ define mariadb_galera::create::root_password (
   file {
     default:
       mode    => '0750',
+      owner   => root,
+      group   => root,
       require => File['/root/bin'];
+    '/root/.my.cnf':
+      mode    => '0660',
+      notify  => Xinetd::Service['galerachk'],
+      content => Sensitive("[client]\nuser=root\npassword=${root_password.unwrap}\n");
     '/root/bin/pw_change.sh':
       content => Sensitive(epp("${module_name}/root_pw/pw_change.sh.epp", {
         'root_cnf'      => $root_cnf,
