@@ -13,7 +13,7 @@ class mariadb_galera::consul {
         interval => '10s'
       }
     ],
-    port    => 3600,
+    port    => 3306,
     require => Class['geant_consul::agent::consul'];
   }
 
