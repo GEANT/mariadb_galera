@@ -24,7 +24,7 @@ class mariadb_galera::files (
     '/etc/mysql/mariadb.conf.d/50-server.cnf':
       notify  => Service['mariadb'],
       require => Package['mariadb-server'],
-      content => epp("${module_name}/50-galera.cnf.epp", {
+      content => epp("${module_name}/50-server.cnf.epp", {
         innodb_buffer_pool_size_percent => $innodb_buffer_pool_size_percent,
         innodb_buffer_pool_instances    => $innodb_buffer_pool_instances,
         innodb_flush_method             => $innodb_flush_method,
