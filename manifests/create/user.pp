@@ -53,6 +53,14 @@ define mariadb_galera::create::user (
       provider      => 'mysql',
       require       => Mysql::Db[$schema_array_no_stars];
     }
+    galera_proxysql::create::grant { "${galera_ip} ${dbuser}":
+      ensure     => $ensure,
+      source     => $galera_ip,
+      dbuser     => $dbuser,
+      table      => $table,
+      privileges => $privileges,
+      require    => Mysql_user["${dbuser}@${galera_ip}"]
+    }
   }
 
   unless trusted_sources == [] {
@@ -74,6 +82,14 @@ define mariadb_galera::create::user (
         password_hash => mysql_password($dbpass.unwrap),
         provider      => 'mysql',
         require       => Mysql::Db[$schema_array_no_stars];
+      }
+      galera_proxysql::create::grant { "${item} ${dbuser}":
+        ensure     => $ensure,
+        source     => $item,
+        dbuser     => $dbuser,
+        table      => $table,
+        privileges => $privileges,
+        require    => Mysql_user["${dbuser}@${item}"]
       }
     }
   }
