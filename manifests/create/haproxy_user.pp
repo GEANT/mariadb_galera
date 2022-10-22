@@ -1,7 +1,7 @@
-# Class: mariadb_galera::create::haproxy (
+# Class: mariadb_galera::create::haproxy_user (
 #
 #
-class mariadb_galera::create::haproxy {
+class mariadb_galera::create::haproxy_user {
 
 
   $sql_file = "CREATE USER haproxy@'%';\nGRANT PROCESS ON *.* TO 'haproxy'@'%';\nFLUSH PRIVILEGES;\n"

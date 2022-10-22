@@ -18,7 +18,7 @@ class mariadb_galera (
   include mariadb_galera::install
   include mariadb_galera::services
   include mariadb_galera::consul
-  include mariadb_galera::create::haproxy
+  include mariadb_galera::create::haproxy_user
 
   class { 'mariadb_galera::files':
     custom_server_cnf_parameters    => $custom_server_cnf_parameters,
