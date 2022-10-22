@@ -34,4 +34,6 @@ class mariadb_galera (
     require       => Service['mariadb'];
   }
 
+  echo { "${facts['galera_status']} ddd": }
+
 }

@@ -48,7 +48,7 @@ define mariadb_galera::create::root_password (
       }));
   }
 
-  if ($facts['galera_rootcnf_exist'] and $facts['galera_joined_exist'] and $facts['galera_status'] == '200') {
+  if ($facts['galera_rootcnf_exist'] and $facts['galera_status'] == '200') {
     exec { 'change_root_password':
       require => File[
         '/root/bin/new_pw_check.sh', '/root/bin/old_pw_check.sh', '/root/bin/pw_change.sh'
