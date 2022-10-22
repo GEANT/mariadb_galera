@@ -21,10 +21,6 @@ define mariadb_galera::create::root_password (
     $root_host_list = ['localhost']
   }
 
-  # privileges ALL isn't working well with puppetlabs/mysql module on Percona 8
-  # we use a function to apply a workaround (until the fix comes)
-  #$root_privileges = mariadb_galera::root_privileges_workaround(['ALL'])
-
   file {
     default:
       mode    => '0750',

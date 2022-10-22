@@ -34,4 +34,6 @@ class mariadb_galera (
     require       => Service['mariadb'];
   }
 
+  echo { "test ${facts['galera_rootcnf_exist']}": }
+
 }
