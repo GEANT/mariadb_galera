@@ -53,7 +53,7 @@ define mariadb_galera::create::user (
       provider      => 'mysql',
       require       => Mysql::Db[$schema_array_no_stars];
     }
-    galera_proxysql::create::grant { "${galera_ip} ${dbuser}":
+    mariadb_galera::create::grant { "${galera_ip} ${dbuser}":
       ensure     => $ensure,
       source     => $galera_ip,
       dbuser     => $dbuser,
@@ -83,7 +83,7 @@ define mariadb_galera::create::user (
         provider      => 'mysql',
         require       => Mysql::Db[$schema_array_no_stars];
       }
-      galera_proxysql::create::grant { "${item} ${dbuser}":
+      mariadb_galera::create::grant { "${item} ${dbuser}":
         ensure     => $ensure,
         source     => $item,
         dbuser     => $dbuser,
