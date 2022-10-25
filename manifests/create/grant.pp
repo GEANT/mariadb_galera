@@ -18,6 +18,7 @@ define mariadb_galera::create::grant (
   }
 
   $table_array.each | $table_item | {
+    echo { "${dbuser}@${source}/${table_item}": }
     mysql_grant { "${dbuser}@${source}/${table_item}":
       ensure     => $ensure,
       user       => "${dbuser}@${source}",

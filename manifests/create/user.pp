@@ -10,7 +10,7 @@ define mariadb_galera::create::user (
   $dbuser                       = $name,
   $force_schema_removal         = false,  # do not drop DB if a user is removed
   Enum['present', 'absent', present, absent] $ensure = present,
-  Optional[Array[Variant[Stdlib::IP::Address, Stdlib::Fqdn]]] $trusted_sources = [],
+  Optional[Array[Variant[Stdlib::IP::Address, Stdlib::Fqdn, String]]] $trusted_sources = [],
   $collate = 'utf8mb3_bin',
   $charset = 'utf8mb3'
 ) {
