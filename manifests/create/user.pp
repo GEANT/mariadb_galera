@@ -85,7 +85,7 @@ define mariadb_galera::create::user (
         ensure     => $ensure,
         source     => $item,
         dbuser     => $dbuser,
-        table      => $schema_name,
+        table      => $table,
         privileges => $privileges;
       }
     }
