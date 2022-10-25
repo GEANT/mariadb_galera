@@ -75,20 +75,21 @@ define mariadb_galera::create::user (
 
     $translated_trusted_sources = unique(flatten($_translated_trusted_sources))
 
+    $translated_trusted_sources.each | $item | { echo { $item: } }
+
     $translated_trusted_sources.each | $item | {
-      mysql_user { "${dbuser}@'${item}'":
+      mysql_user { "${dbuser}@${item}":
         ensure        => $ensure,
         password_hash => mysql_password($dbpass.unwrap),
         provider      => 'mysql',
         require       => Mysql::Db[$schema_array_no_stars];
       }
-      mariadb_galera::create::grant { "${item} ${dbuser}":
+      -> mariadb_galera::create::grant { "${item} ${dbuser}":
         ensure     => $ensure,
         source     => $item,
         dbuser     => $dbuser,
         table      => $table,
-        privileges => $privileges,
-        require    => Mysql_user["${dbuser}@'${item}'"]
+        privileges => $privileges;
       }
     }
   }
