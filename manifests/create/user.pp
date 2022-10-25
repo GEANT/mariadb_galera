@@ -64,7 +64,7 @@ define mariadb_galera::create::user (
   }
 
   unless trusted_sources == [] {
-    $_translated_trusted_sources.each | $item | { echo { $item } }
+    $trusted_sources.each | $item | { echo { $item: } }
     $_translated_trusted_sources = $trusted_sources.map |$item| {
       if item =~ Stdlib::Fqdn {
         [dns_a($item)[0], dns_aaaa($item)[0]]
