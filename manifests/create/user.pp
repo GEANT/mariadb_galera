@@ -76,7 +76,7 @@ define mariadb_galera::create::user (
     $translated_trusted_sources = unique(flatten($_translated_trusted_sources))
 
     $translated_trusted_sources.each | $item | {
-      mysql_user { "${dbuser}@${item}":
+      mysql_user { "${dbuser}@'${item}'":
         ensure        => $ensure,
         password_hash => mysql_password($dbpass.unwrap),
         provider      => 'mysql',
@@ -88,7 +88,7 @@ define mariadb_galera::create::user (
         dbuser     => $dbuser,
         table      => $table,
         privileges => $privileges,
-        require    => Mysql_user["${dbuser}@${item}"]
+        require    => Mysql_user["${dbuser}@'${item}'"]
       }
     }
   }
