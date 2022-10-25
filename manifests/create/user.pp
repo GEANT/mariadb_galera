@@ -57,7 +57,7 @@ define mariadb_galera::create::user (
       ensure     => $ensure,
       source     => $galera_ip,
       dbuser     => $dbuser,
-      table      => $table,
+      table      => $schema_name,
       privileges => $privileges,
       require    => Mysql_user["${dbuser}@${galera_ip}"]
     }
@@ -88,7 +88,7 @@ define mariadb_galera::create::user (
         ensure     => $ensure,
         source     => $item,
         dbuser     => $dbuser,
-        table      => $table,
+        table      => $schema_name,
         privileges => $privileges;
       }
     }
