@@ -64,7 +64,6 @@ define mariadb_galera::create::user (
   }
 
   unless trusted_sources == [] {
-    $trusted_sources.each | $item | { echo { $item: } }
     $_translated_trusted_sources = $trusted_sources.map |$item| {
       if item =~ Stdlib::Fqdn {
         [dns_a($item)[0], dns_aaaa($item)[0]]
@@ -74,8 +73,6 @@ define mariadb_galera::create::user (
     }
 
     $translated_trusted_sources = unique(flatten($_translated_trusted_sources)).filter |$val| { $val =~ NotUndef }
-
-    $translated_trusted_sources.each | $item | { echo { $item: } }
 
     $translated_trusted_sources.each | $item | {
       mysql_user { "${dbuser}@${item}":

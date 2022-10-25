@@ -19,7 +19,6 @@ define mariadb_galera::create::grant (
 
   $table_array.each | $table_item | {
     $down_source = downcase($source)
-    echo { "${dbuser}@${down_source}/${table_item}": }
     mysql_grant { "${dbuser}@${down_source}/${table_item}":
       ensure     => $ensure,
       user       => "${dbuser}@${down_source}",
