@@ -71,6 +71,7 @@ define mariadb_galera::create::user (
       } else {
         $item
       }
+      echo { $item: }
     }
 
     $translated_trusted_sources = unique(flatten($_translated_trusted_sources))
