@@ -69,7 +69,7 @@ define mariadb_galera::create::user (
       if item =~ Stdlib::Fqdn {
         [dns_a($item)[0], dns_aaaa($item)[0]]
       } elsif item =~ Stdlib::IP::Address::V6 {
-        downcase(dns_aaaa($item)[0])
+        dns_aaaa($item)[0]
       } else {
         dns_a($item)[0]
       }
