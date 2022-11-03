@@ -81,7 +81,7 @@ define mariadb_galera::create::user (
     $translated_trusted_sources = unique(flatten($_translated_trusted_sources)).filter |$val| { $val =~ NotUndef }
 
     unless defined(Echo["translated trusted sources ${translated_trusted_sources}"]) {
-      echo { "trusted sources ${translated_trusted_sources}":; }
+      echo { "translated trusted sources ${translated_trusted_sources}":; }
     }
 
     $translated_trusted_sources.each | $item | {
