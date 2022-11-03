@@ -60,7 +60,7 @@ define mariadb_galera::create::user (
       ensure     => $ensure,
       source     => $galera_ip,
       dbuser     => $dbuser,
-      table      => $schema_name,
+      table      => $table,
       privileges => $privileges,
       require    => Mysql_user["${dbuser}@${galera_ip}"]
     }
