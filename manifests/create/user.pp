@@ -17,9 +17,6 @@ define mariadb_galera::create::user (
 
   $galera_ips = $galera_ipv4 + $galera_ipv6
 
-  unless defined(Echo["galera ips ${galera_ips}"]) { echo { "galera ips ${galera_ips}":; } }
-  unless defined(Echo["trusted sources ${trusted_sources}"]) { echo { "trusted sources ${trusted_sources}":; } }
-
   if $table =~ String {
     $schema_name = [split($table, '[.]')[0]]
   } else {
@@ -51,7 +48,7 @@ define mariadb_galera::create::user (
 
   $galera_ips.each | $galera_ip | {
 
-    echo { "${galera_ip} ${dbuser}":; }
+    echo { "${galera_ip} ${dbuser} ${ensure} ${galera_ip} ${dbuser} ${schema_name} ${privileges}":; }
 
     mysql_user { "${dbuser}@${galera_ip}":
       ensure        => $ensure,
@@ -80,23 +77,19 @@ define mariadb_galera::create::user (
 
     $translated_trusted_sources = unique(flatten($_translated_trusted_sources)).filter |$val| { $val =~ NotUndef }
 
-    unless defined(Echo["translated trusted sources ${translated_trusted_sources}"]) {
-      echo { "translated trusted sources ${translated_trusted_sources}":; }
-    }
+    $translated_trusted_sources.each | $trusted_ip | {
 
-    $translated_trusted_sources.each | $item | {
+      echo { "${trusted_ip} ${dbuser} ${ensure} ${trusted_ip} ${dbuser} ${table} ${privileges}":; }
 
-      echo { "${item} ${dbuser}":; }
-
-      mysql_user { "${dbuser}@${item}":
+      mysql_user { "${dbuser}@${trusted_ip}":
         ensure        => $ensure,
         password_hash => mysql_password($dbpass.unwrap),
         provider      => 'mysql',
         require       => Mysql::Db[$schema_array_no_stars];
       }
-      -> mariadb_galera::create::grant { "${item} ${dbuser}":
+      -> mariadb_galera::create::grant { "${trusted_ip} ${dbuser}":
         ensure     => $ensure,
-        source     => $item,
+        source     => $trusted_ip,
         dbuser     => $dbuser,
         table      => $table,
         privileges => $privileges;
