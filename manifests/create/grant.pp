@@ -2,7 +2,7 @@
 #
 #
 define mariadb_galera::create::grant (
-  $table,
+  $table_array,
   $privileges,
   $dbuser,
   $source,
@@ -10,12 +10,6 @@ define mariadb_galera::create::grant (
 ) {
 
   assert_private("this define should be called only by ${module_name}")
-
-  if $table =~ String {
-    $table_array = [$table]
-  } else {
-    $table_array = $table
-  }
 
   $down_source = downcase($source)
 

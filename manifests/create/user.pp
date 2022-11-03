@@ -18,8 +18,10 @@ define mariadb_galera::create::user (
   $galera_ips = $galera_ipv4 + $galera_ipv6
 
   if $table =~ String {
+    $table_array = [$table]
     $schema_name = [split($table, '[.]')[0]]
   } else {
+    $table_array = $table
     $schema_name = $table.map |$item| {split($item, '[.]')[0]}
   }
 
@@ -29,7 +31,7 @@ define mariadb_galera::create::user (
     $ensure_schema = present
   }
 
-  # start '*' is not a schema that we need to create
+  # star '*' is not a schema that we need to create
   $schema_array_no_stars = $schema_name.filter |$item| { $item != '*' }
 
   $schema_array_no_stars.each | $myschema | {
@@ -48,21 +50,18 @@ define mariadb_galera::create::user (
 
   $galera_ips.each | $galera_ip | {
 
-    echo { "${galera_ip} ${dbuser} ${ensure} ${galera_ip} ${dbuser} ${schema_name} ${privileges}":; }
-
     mysql_user { "${dbuser}@${galera_ip}":
       ensure        => $ensure,
       password_hash => mysql_password($dbpass.unwrap),
       provider      => 'mysql',
       require       => Mysql::Db[$schema_array_no_stars];
     }
-    mariadb_galera::create::grant { "${galera_ip} ${dbuser}":
-      ensure     => $ensure,
-      source     => $galera_ip,
-      dbuser     => $dbuser,
-      table      => $table,
-      privileges => $privileges,
-      require    => Mysql_user["${dbuser}@${galera_ip}"]
+    -> mariadb_galera::create::grant { "${galera_ip} ${dbuser}":
+      ensure      => $ensure,
+      source      => $galera_ip,
+      dbuser      => $dbuser,
+      table_array => $table_array,
+      privileges  => $privileges,
     }
   }
 
@@ -79,7 +78,7 @@ define mariadb_galera::create::user (
 
     $translated_trusted_sources.each | $trusted_ip | {
 
-      echo { "${trusted_ip} ${dbuser} ${ensure} ${trusted_ip} ${dbuser} ${table} ${privileges}":; }
+      $down_source = downcase($trusted_ip)
 
       mysql_user { "${dbuser}@${trusted_ip}":
         ensure        => $ensure,
@@ -88,11 +87,11 @@ define mariadb_galera::create::user (
         require       => Mysql::Db[$schema_array_no_stars];
       }
       -> mariadb_galera::create::grant { "${trusted_ip} ${dbuser}":
-        ensure     => $ensure,
-        source     => $trusted_ip,
-        dbuser     => $dbuser,
-        table      => $table,
-        privileges => $privileges;
+        ensure      => $ensure,
+        source      => $trusted_ip,
+        dbuser      => $dbuser,
+        table_array => $table_array,
+        privileges  => $privileges;
       }
     }
   }
