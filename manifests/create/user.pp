@@ -17,8 +17,8 @@ define mariadb_galera::create::user (
 
   $galera_ips = $galera_ipv4 + $galera_ipv6
 
-  echo { "galera ips ${galera_ips}":; }
-  echo { "trustedd sources ${trusted_sources}":; }
+  unless defined(Echo["galera ips ${galera_ips}"]) { echo { "galera ips ${galera_ips}":; } }
+  unless defined(Echo["trusted sources ${trusted_sources}"]) { echo { "trusted sources ${trusted_sources}":; } }
 
   if $table =~ String {
     $schema_name = [split($table, '[.]')[0]]
@@ -79,6 +79,10 @@ define mariadb_galera::create::user (
     }
 
     $translated_trusted_sources = unique(flatten($_translated_trusted_sources)).filter |$val| { $val =~ NotUndef }
+
+    unless defined(Echo["translated trusted sources ${translated_trusted_sources}"]) {
+      echo { "trusted sources ${translated_trusted_sources}":; }
+    }
 
     $translated_trusted_sources.each | $item | {
 
