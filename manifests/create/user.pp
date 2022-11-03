@@ -47,6 +47,9 @@ define mariadb_galera::create::user (
   }
 
   $galera_ips.each | $galera_ip | {
+
+    echo { "${galera_ip} ${dbuser}":; }
+
     mysql_user { "${dbuser}@${galera_ip}":
       ensure        => $ensure,
       password_hash => mysql_password($dbpass.unwrap),
@@ -75,6 +78,9 @@ define mariadb_galera::create::user (
     $translated_trusted_sources = unique(flatten($_translated_trusted_sources)).filter |$val| { $val =~ NotUndef }
 
     $translated_trusted_sources.each | $item | {
+
+      echo { "${item} ${dbuser}":; }
+
       mysql_user { "${dbuser}@${item}":
         ensure        => $ensure,
         password_hash => mysql_password($dbpass.unwrap),
