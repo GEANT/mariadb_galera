@@ -17,6 +17,9 @@ define mariadb_galera::create::user (
 
   $galera_ips = $galera_ipv4 + $galera_ipv6
 
+  echo { "galera ips ${galera_ips}":; }
+  echo { "trustedd sources ${trusted_sources}":; }
+
   if $table =~ String {
     $schema_name = [split($table, '[.]')[0]]
   } else {
