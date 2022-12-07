@@ -2,6 +2,7 @@
 #
 #
 class mariadb_galera (
+  String $galera_servers_pattern,
   Sensitive $root_password         = $mariadb_galera::params::root_password,
 
   # Innodb Options
@@ -21,6 +22,7 @@ class mariadb_galera (
   include mariadb_galera::create::haproxy_user
 
   class { 'mariadb_galera::files':
+    galera_servers_pattern          => $galera_servers_pattern,
     custom_server_cnf_parameters    => $custom_server_cnf_parameters,
     innodb_buffer_pool_size_percent => $innodb_buffer_pool_size_percent,
     innodb_flush_method             => $innodb_flush_method,

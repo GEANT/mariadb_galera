@@ -8,11 +8,17 @@ class mariadb_galera::files (
   $max_connections,
   $custom_server_cnf_parameters,
   $thread_cache_size,
-  $galera_ips_v4_string    = $mariadb_galera::params::galera_ips_v4_string,
-  $galera_ips_v4           = $mariadb_galera::params::galera_ips_v4,
-  $my_ip                   = $mariadb_galera::params::my_ip,
-  $galera_ips_v4_separated = $mariadb_galera::params::galera_ips_v4_separated
+  $galera_servers_pattern,
+  $my_ip = $mariadb_galera::params::my_ip,
 ) {
+
+  $galera_server_hash = puppetdb_query("inventory[facts.ipaddress, facts.ipaddress6] {facts.hostname ~ '${galera_servers_pattern}' and facts.agent_specified_environment = '${::environment}'}")
+
+  $galera_ips_v6 = sort($galera_server_hash.map | $k, $v | {$v['facts.ipaddress6'] })
+  $galera_ips_v4 = sort($galera_server_hash.map | $k, $v | {$v['facts.ipaddress'] })
+  $galera_ips_v4_string = join($galera_ips_v4, ',')
+  $_galera_ips_v4_space_separated = join($galera_ips_v4, ':3306 ')
+  $galera_ips_v4_separated = "${_galera_ips_v4_space_separated}:3307"
 
   file {
     default:
