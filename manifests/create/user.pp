@@ -3,8 +3,7 @@
 #
 define mariadb_galera::create::user (
   Sensitive $dbpass,
-  $galera_ipv4,
-  $galera_ipv6                  = [],
+  String $galera_servers_pattern,
   $privileges                   = ['SELECT'],
   Variant[Array, String] $table = '*.*',  # Example: 'schema.table', 'schema.*', '*.*'
   $dbuser                       = $name,
@@ -15,6 +14,9 @@ define mariadb_galera::create::user (
   $charset = 'utf8mb3'
 ) {
 
+  $galera_server_hash = puppetdb_query("inventory[facts.ipaddress, facts.ipaddress6] {facts.hostname ~ '${galera_servers_pattern}' and facts.agent_specified_environment = '${::environment}'}")
+  $galera_ipv4 = sort($galera_server_hash.map | $k, $v | {$v['facts.ipaddress'] })
+  $galera_ipv6 = sort($galera_server_hash.map | $k, $v | {$v['facts.ipaddress6'] })
   $galera_ips = $galera_ipv4 + $galera_ipv6
 
   if $table =~ String {
