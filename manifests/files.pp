@@ -45,6 +45,9 @@ class mariadb_galera::files (
     '/etc/mysql/mariadb.cnf':
       notify => Service['mariadb'],
       source => "puppet:///modules/${module_name}/mariadb.cnf";
+    '/usr/local/bin/mysqltuner.pl':
+      mode   => '0755',
+      source => 'puppet:///modules/depot/mysql/mysqltuner.pl';
   }
 
 }
