@@ -44,7 +44,6 @@ class mariadb_galera (
   $max_connections                 = $mariadb_galera::params::max_connections,
   $thread_cache_size               = $mariadb_galera::params::thread_cache_size,
   $custom_server_cnf_parameters    = $mariadb_galera::params::custom_server_cnf_parameters
-
 ) inherits mariadb_galera::params {
   include mariadb_galera::repo
   include mariadb_galera::install
