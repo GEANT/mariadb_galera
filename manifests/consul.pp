@@ -9,7 +9,7 @@
 class mariadb_galera::consul (String $consul_service_name) {
   include geant_consul::agent::consul
 
-  consul::service { "${::environment}-mariadb-galera":
+  consul::service { $consul_service_name:
     address => $facts['ipaddress'],
     checks  => [
       {
