@@ -8,7 +8,6 @@ define mariadb_galera::create::grant (
   $source,
   $ensure = present,
 ) {
-
   assert_private("this define should be called only by ${module_name}")
 
   $down_source = downcase($source)
@@ -21,5 +20,4 @@ define mariadb_galera::create::grant (
       privileges => $privileges;
     }
   }
-
 }

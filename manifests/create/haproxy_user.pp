@@ -2,7 +2,6 @@
 #
 #
 class mariadb_galera::create::haproxy_user {
-
   assert_private("this define should be called only by ${module_name}")
 
   $sql_file = "CREATE USER haproxy@'%';\nGRANT PROCESS ON *.* TO 'haproxy'@'%';\nFLUSH PRIVILEGES;\n"
@@ -14,5 +13,4 @@ class mariadb_galera::create::haproxy_user {
     logoutput => true,
     require   => [Service['mariadb'], File['/root/.my.cnf']];
   }
-
 }

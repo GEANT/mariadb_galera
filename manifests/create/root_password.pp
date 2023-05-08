@@ -13,7 +13,6 @@ define mariadb_galera::create::root_password (
   Sensitive $root_password,
   Boolean $force_ipv6 = false
 ) {
-
   $root_cnf = '/root/.my.cnf'
   if ($force_ipv6) {
     $root_host_list = ['localhost', '::1']
@@ -37,14 +36,14 @@ define mariadb_galera::create::root_password (
       content => Sensitive("[client]\nuser=root\npassword=${root_password.unwrap}\n");
     '/root/bin/pw_change.sh':
       content => Sensitive(epp("${module_name}/root_pw/pw_change.sh.epp", {
-        'root_cnf'      => $root_cnf,
-        'root_password' => Sensitive($root_password),
+            'root_cnf'      => $root_cnf,
+            'root_password' => Sensitive($root_password),
       }));
     '/root/bin/old_pw_check.sh':
       content => epp("${module_name}/root_pw/old_pw_check.sh.epp", { 'root_cnf' => $root_cnf });
     '/root/bin/new_pw_check.sh':
       content => Sensitive(epp("${module_name}/root_pw/new_pw_check.sh.epp", {
-        'root_password' => Sensitive($root_password)
+            'root_password' => Sensitive($root_password)
       }));
   }
 
@@ -71,5 +70,4 @@ define mariadb_galera::create::root_password (
       require    => File[$root_cnf];
     }
   }
-
 }

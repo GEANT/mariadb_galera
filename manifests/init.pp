@@ -14,7 +14,6 @@ class mariadb_galera (
   $custom_server_cnf_parameters    = $mariadb_galera::params::custom_server_cnf_parameters
 
 ) inherits mariadb_galera::params {
-
   include mariadb_galera::repo
   include mariadb_galera::install
   include mariadb_galera::services
@@ -28,12 +27,11 @@ class mariadb_galera (
     innodb_flush_method             => $innodb_flush_method,
     innodb_log_file_size            => $innodb_log_file_size,
     max_connections                 => $max_connections,
-    thread_cache_size               => $thread_cache_size
+    thread_cache_size               => $thread_cache_size,
   }
 
   mariadb_galera::create::root_password { 'root':
     root_password => Sensitive($root_password),
     require       => Service['mariadb'];
   }
-
 }

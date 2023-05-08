@@ -6,7 +6,6 @@
 class mariadb_galera::services (
   $mariadb_packages = $mariadb_galera::params::mariadb_packages
 ) {
-
   xinetd::service { 'galerachk':
     server         => '/usr/bin/clustercheck',
     port           => '9200',
@@ -21,5 +20,4 @@ class mariadb_galera::services (
       '/usr/bin/clustercheck',
     ];
   }
-
 }

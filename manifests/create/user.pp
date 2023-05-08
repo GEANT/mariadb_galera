@@ -13,10 +13,9 @@ define mariadb_galera::create::user (
   $collate = 'utf8mb3_bin',
   $charset = 'utf8mb3'
 ) {
-
   $galera_server_hash = puppetdb_query("inventory[facts.ipaddress, facts.ipaddress6] {facts.hostname ~ '${galera_servers_pattern}' and facts.agent_specified_environment = '${::environment}'}")
-  $galera_ipv4 = sort($galera_server_hash.map | $k, $v | {$v['facts.ipaddress'] })
-  $galera_ipv6 = sort($galera_server_hash.map | $k, $v | {$v['facts.ipaddress6'] })
+  $galera_ipv4 = sort($galera_server_hash.map | $k, $v | { $v['facts.ipaddress'] })
+  $galera_ipv6 = sort($galera_server_hash.map | $k, $v | { $v['facts.ipaddress6'] })
   $galera_ips = $galera_ipv4 + $galera_ipv6
 
   if $table =~ String {
@@ -24,7 +23,7 @@ define mariadb_galera::create::user (
     $schema_name = [split($table, '[.]')[0]]
   } else {
     $table_array = $table
-    $schema_name = $table.map |$item| {split($item, '[.]')[0]}
+    $schema_name = $table.map |$item| { split($item, '[.]')[0] }
   }
 
   if ($force_schema_removal) {
@@ -51,7 +50,6 @@ define mariadb_galera::create::user (
   }
 
   $galera_ips.each | $galera_ip | {
-
     mysql_user { "${dbuser}@${galera_ip}":
       ensure        => $ensure,
       password_hash => mysql_password($dbpass.unwrap),
@@ -79,7 +77,6 @@ define mariadb_galera::create::user (
     $translated_trusted_sources = unique(flatten($_translated_trusted_sources)).filter |$val| { $val =~ NotUndef }
 
     $translated_trusted_sources.each | $trusted_ip | {
-
       $down_source = downcase($trusted_ip)
 
       mysql_user { "${dbuser}@${trusted_ip}":
@@ -97,5 +94,4 @@ define mariadb_galera::create::user (
       }
     }
   }
-
 }
