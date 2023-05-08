@@ -1,7 +1,12 @@
 # == Class: mariadb_galera::consul
 #
 #
-class mariadb_galera::consul {
+# === Parameters
+#
+# [*consul_service_name*]
+#   The name of the service to register in consul
+#
+class mariadb_galera::consul (String $consul_service_name) {
   include geant_consul::agent::consul
 
   consul::service { "${::environment}-mariadb-galera":

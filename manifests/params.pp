@@ -4,6 +4,8 @@
 class mariadb_galera::params {
   $my_ip = dns_a($facts['fqdn'])[0]
 
+  $consul_service_name = "${facts['agent_specified_environment']}-mariadb-galera"
+
   $root_password = Sensitive(lookup('galera_root_password', Optional[String], 'first', 'root'))
 
   # == mysqld options
