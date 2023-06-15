@@ -7,6 +7,11 @@
 #   The name of the service to register in consul
 #
 class mariadb_galera::consul (String $consul_service_name) {
+  $db_env = $facts['agent_specified_enrironment'] ? {
+    'production' => 'prod',
+    default => $facts['agent_specified_enrironment'],
+  }
+
   include geant_consul::agent::consul
 
   consul::service { $consul_service_name:
@@ -18,6 +23,13 @@ class mariadb_galera::consul (String $consul_service_name) {
       },
     ],
     port    => 3306,
+    tags    => [
+      "${db_env}-traefik.enable=true",
+      "${db_env}-traefik.tcp.routers.mariadb.rule=HostSNI(`*`)",
+      "${db_env}-traefik.tcp.routers.mariadb.entrypoints=${db_env}-mariadb-galera",
+      "${db_env}-traefik.tcp.routers.mariadb.service=${db_env}-mariadb-galera",
+      "${db_env}-traefik.tcp.services.mariadb.loadbalancer.server.port=3306",
+    ],
     require => Class['geant_consul::agent::consul'];
   }
 }
