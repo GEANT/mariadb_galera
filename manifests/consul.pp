@@ -7,9 +7,9 @@
 #   The name of the service to register in consul
 #
 class mariadb_galera::consul (String $consul_service_name) {
-  $db_env = $facts['agent_specified_enrironment'] ? {
+  $db_env = $facts['agent_specified_environment'] ? {
     'production' => 'prod',
-    default => $facts['agent_specified_enrironment'],
+    default => $facts['agent_specified_environment'],
   }
 
   include geant_consul::agent::consul
