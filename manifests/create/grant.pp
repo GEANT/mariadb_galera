@@ -20,7 +20,7 @@
 #
 define mariadb_galera::create::grant (
   Array $table_array,
-  String $privileges,
+  Array $privileges,
   String $dbuser,
   Stdlib::Ip::Address $source,
   Enum[present, absent] $ensure = present,
