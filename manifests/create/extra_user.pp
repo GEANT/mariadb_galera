@@ -2,13 +2,36 @@
 #
 # Add users to existing database
 #
+# === Parameters
+#
+# [*dbpass*]
+#   Password for the user
+#
+# [*database*]
+#   Database name
+#
+# [*galera_servers_pattern*]
+#   Pattern to match galera servers
+#
+# [*privileges*]
+#   Privileges to grant to the user
+#
+# [*table*]
+#   Table to grant privileges on
+#
+# [*dbuser*]
+#   Username to create
+#
+# [*ensure*]
+#   Ensure the user is present or absent
+#
 define mariadb_galera::create::extra_user (
   Sensitive $dbpass,
   String $database,
   String $galera_servers_pattern,
-  $privileges                   = ['SELECT'],
+  Array $privileges             = ['SELECT'],
   Variant[Array, String] $table = '*.*',  # Example: 'schema.table', 'schema.*', '*.*'
-  $dbuser                       = $name,  # do not drop DB if a user is removed
+  String $dbuser                = $name,  # do not drop DB if a user is removed
   Enum['present', 'absent', present, absent] $ensure = present,
 ) {
   $galera_server_hash = puppetdb_query("inventory[facts.ipaddress, facts.ipaddress6] {facts.hostname ~ '${galera_servers_pattern}' and facts.agent_specified_environment = '${::environment}'}")

@@ -9,6 +9,13 @@
 # belonged to a cluster and if the cluster status is 200
 #
 #
+# === Parameters
+#
+# [*root_password*]
+#   the new password for the root user
+#
+# [*force_ipv6*]
+#   if set to true, the root password will be set for localhost and ::1
 define mariadb_galera::create::root_password (
   Sensitive $root_password,
   Boolean $force_ipv6 = false

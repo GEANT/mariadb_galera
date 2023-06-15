@@ -34,16 +34,16 @@
 #
 class mariadb_galera (
   String $galera_servers_pattern,
-  Sensitive $root_password         = $mariadb_galera::params::root_password,
-  String $consul_service_name      = $mariadb_galera::params::consul_service_name,
+  Sensitive $root_password           = $mariadb_galera::params::root_password,
+  String $consul_service_name        = $mariadb_galera::params::consul_service_name,
 
   # Innodb Options
-  $innodb_buffer_pool_size_percent = $mariadb_galera::params::innodb_buffer_pool_size_percent,
-  $innodb_flush_method             = $mariadb_galera::params::innodb_flush_method,
-  $innodb_log_file_size            = $mariadb_galera::params::innodb_log_file_size,
-  $max_connections                 = $mariadb_galera::params::max_connections,
-  $thread_cache_size               = $mariadb_galera::params::thread_cache_size,
-  $custom_server_cnf_parameters    = $mariadb_galera::params::custom_server_cnf_parameters
+  String $innodb_flush_method        = $mariadb_galera::params::innodb_flush_method,
+  STring $innodb_log_file_size       = $mariadb_galera::params::innodb_log_file_size,
+  Integer $max_connections           = $mariadb_galera::params::max_connections,
+  Integer $thread_cache_size         = $mariadb_galera::params::thread_cache_size,
+  Hash $custom_server_cnf_parameters = $mariadb_galera::params::custom_server_cnf_parameters,
+  Variant[String, Integer] $innodb_buffer_pool_size_percent = $mariadb_galera::params::innodb_buffer_pool_size_percent
 ) inherits mariadb_galera::params {
   include mariadb_galera::repo
   include mariadb_galera::install

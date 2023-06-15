@@ -1,17 +1,49 @@
 # == Define: mariadb_galera::create::user
 #
 #
+# === Parameters
+#
+# [*dbpass*]
+#   Password for the user.
+#
+# [*galera_servers_pattern*]
+#   Pattern to match the galera servers.
+#
+# [*privileges*]
+#   Privileges to grant to the user.
+#
+# [*table*]
+#   Table to grant privileges on.
+#
+# [*dbuser*]
+#   Name of the user.
+#
+# [*force_schema_removal*]
+#   Do not drop DB if a user is removed.
+#
+# [*ensure*]
+#   Ensure the user is present or absent.
+#
+# [*trusted_sources*]
+#   Trusted sources for the user.
+#
+# [*collate*]
+#   Collate for the user.
+#
+# [*charset*]
+#   Charset for the user.
+#
 define mariadb_galera::create::user (
   Sensitive $dbpass,
   String $galera_servers_pattern,
-  $privileges                   = ['SELECT'],
+  Array $privileges             = ['SELECT'],
   Variant[Array, String] $table = '*.*',  # Example: 'schema.table', 'schema.*', '*.*'
-  $dbuser                       = $name,
-  $force_schema_removal         = false,  # do not drop DB if a user is removed
+  String  $dbuser               = $name,
+  Boolean $force_schema_removal = false,  # do not drop DB if a user is removed
+  String $collate               = 'utf8mb3_bin',
+  String $charset               = 'utf8mb3',
   Enum['present', 'absent', present, absent] $ensure = present,
-  Optional[Array[Variant[Stdlib::IP::Address, Stdlib::Fqdn, String]]] $trusted_sources = [],
-  $collate = 'utf8mb3_bin',
-  $charset = 'utf8mb3'
+  Array[Variant[Stdlib::IP::Address, Stdlib::Fqdn, String]] $trusted_sources = [],
 ) {
   $galera_server_hash = puppetdb_query("inventory[facts.ipaddress, facts.ipaddress6] {facts.hostname ~ '${galera_servers_pattern}' and facts.agent_specified_environment = '${::environment}'}")
   $galera_ipv4 = sort($galera_server_hash.map | $k, $v | { $v['facts.ipaddress'] })
