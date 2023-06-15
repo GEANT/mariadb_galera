@@ -2,15 +2,7 @@
 #
 # This Class manages services
 #
-#
-# === Parameters
-#
-# [*mariadb_packages*]
-#   Array of packages to install
-#
-class mariadb_galera::services (
-  Array[String] $mariadb_packages = $mariadb_galera::params::mariadb_packages
-) {
+class mariadb_galera::services {
   xinetd::service { 'galerachk':
     server         => '/usr/bin/clustercheck',
     port           => '9200',
