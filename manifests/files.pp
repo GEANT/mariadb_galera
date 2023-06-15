@@ -37,7 +37,7 @@ class mariadb_galera::files (
   Hash $custom_server_cnf_parameters,
   Integer $thread_cache_size,
   String $galera_servers_pattern,
-  Stdlib::Address $my_ip = $mariadb_galera::params::my_ip,
+  Stdlib::Ip::Address $my_ip = $mariadb_galera::params::my_ip,
 ) {
   $galera_server_hash = puppetdb_query("inventory[facts.ipaddress, facts.ipaddress6] {facts.hostname ~ '${galera_servers_pattern}' and facts.agent_specified_environment = '${::environment}'}")
 

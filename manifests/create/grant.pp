@@ -22,7 +22,7 @@ define mariadb_galera::create::grant (
   Array $table_array,
   String $privileges,
   String $dbuser,
-  Stdlib::Address $source,
+  Stdlib::Ip::Address $source,
   Enum[present, absent] $ensure = present,
 ) {
   assert_private("this define should be called only by ${module_name}")
