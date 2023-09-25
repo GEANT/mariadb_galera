@@ -8,6 +8,9 @@
 # [*galera_servers_pattern*]
 #   The pattern to use to find the galera servers on the PuppetDB.
 #
+# [*consul_enabled*]
+#   Whether or not to use consul for discovery.
+#
 # [*root_password*]
 #   The root password for the database.
 #
@@ -34,6 +37,7 @@
 #
 class mariadb_galera (
   String $galera_servers_pattern,
+  Boolean $consul_enabled            = $mariadb_galera::params::consul_enabled,
   Sensitive $root_password           = $mariadb_galera::params::root_password,
   String $consul_service_name        = $mariadb_galera::params::consul_service_name,
 
@@ -50,8 +54,10 @@ class mariadb_galera (
   include mariadb_galera::services
   include mariadb_galera::create::haproxy_user
 
-  class { 'mariadb_galera::consul':
-    consul_service_name => $consul_service_name,
+  if $consul_enabled {
+    class { 'mariadb_galera::consul':
+      consul_service_name => $consul_service_name,
+    }
   }
 
   class { 'mariadb_galera::files':
