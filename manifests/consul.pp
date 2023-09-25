@@ -24,6 +24,7 @@ class mariadb_galera::consul (String $consul_service_name) {
     ],
     port    => 3306,
     tags    => [
+      'tcp',
       "${db_env}-traefik.enable=true",
       "${db_env}-traefik",
       "${db_env}-traefik.tcp.routers.${db_env}-mariadb-galera.rule=HostSNI(`*`)",
