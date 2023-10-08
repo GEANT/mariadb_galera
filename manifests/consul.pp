@@ -15,7 +15,7 @@ class mariadb_galera::consul (String $consul_service_name) {
   include geant_consul::agent::consul
 
   consul::service { $consul_service_name:
-    address => $facts['ipaddress'],
+    address => $facts['networking']['ip'],
     checks  => [
       {
         http     => 'http://localhost:9200',

@@ -46,11 +46,11 @@ define mariadb_galera::create::user (
   Array[Variant[Stdlib::IP::Address, Stdlib::Fqdn, String]] $trusted_sources = [],
 ) {
   $galera_server_hash = puppetdb_query(
-    "inventory[facts.ipaddress, facts.ipaddress6] {facts.hostname ~ '${galera_servers_pattern}' \
-    and facts.agent_specified_environment = '${::environment}'}"
+    "inventory[facts.networking.ip, facts.networking.ip6] {facts.networking.hostname ~ '${galera_servers_pattern}' \
+    and facts.agent_specified_environment = '${::environment}'}" # lint:ignore:top_scope_facts
   )
-  $galera_ipv4 = sort($galera_server_hash.map | $k, $v | { $v['facts.ipaddress'] })
-  $galera_ipv6 = sort($galera_server_hash.map | $k, $v | { $v['facts.ipaddress6'] })
+  $galera_ipv4 = sort($galera_server_hash.map | $k, $v | { $v['facts.networking.ip'] })
+  $galera_ipv6 = sort($galera_server_hash.map | $k, $v | { $v['facts.networking.ip6'] })
   $galera_ips = $galera_ipv4 + $galera_ipv6
 
   if $table =~ String {

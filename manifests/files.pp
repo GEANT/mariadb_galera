@@ -40,11 +40,11 @@ class mariadb_galera::files (
   Stdlib::Ip::Address $my_ip = $mariadb_galera::params::my_ip,
 ) {
   $galera_server_hash = puppetdb_query(
-    "inventory[facts.ipaddress, facts.ipaddress6] {facts.hostname ~ '${galera_servers_pattern}' \
-    and facts.agent_specified_environment = '${::environment}'}"
+    "inventory[facts.networking.ip, facts.networking.ip6] {facts.networking.hostname ~ '${galera_servers_pattern}' \
+    and facts.agent_specified_environment = '${::environment}'}" # lint:ignore:top_scope_facts
   )
-  $galera_ips_v6 = sort($galera_server_hash.map | $k, $v | { $v['facts.ipaddress6'] })
-  $galera_ips_v4 = sort($galera_server_hash.map | $k, $v | { $v['facts.ipaddress'] })
+  $galera_ips_v6 = sort($galera_server_hash.map | $k, $v | { $v['facts.networking.ip6'] })
+  $galera_ips_v4 = sort($galera_server_hash.map | $k, $v | { $v['facts.networking.ip'] })
   $galera_ips_v4_string = join($galera_ips_v4, ',')
   $_galera_ips_v4_space_separated = join($galera_ips_v4, ':3306 ')
   $galera_ips_v4_separated = "${_galera_ips_v4_space_separated}:3307"

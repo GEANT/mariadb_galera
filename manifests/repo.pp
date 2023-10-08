@@ -14,7 +14,7 @@ class mariadb_galera::repo {
       include      => {
         'deb' => true,
       },
-      architecture => $facts['architecture'],
+      architecture => $facts['os']['architecture'],
       notify       => Exec['apt_update'],
       require      => Apt::Key['mariadb-server', 'mariadb-tools'];
     'mariadb':

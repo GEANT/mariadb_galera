@@ -2,7 +2,7 @@
 #
 #
 class mariadb_galera::params {
-  $my_ip = dns_a($facts['fqdn'])[0]
+  $my_ip = dns_a($facts['networking']['fqdn'])[0]
 
   $consul_enabled = true
   $consul_service_name = "${facts['agent_specified_environment']}-mariadb-galera"
