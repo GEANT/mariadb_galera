@@ -41,7 +41,7 @@ class mariadb_galera::files (
 ) {
   $galera_server_hash = puppetdb_query(
     "inventory[facts.networking.ip, facts.networking.ip6] {facts.networking.hostname ~ '${galera_servers_pattern}' \
-    and facts.agent_specified_environment = '${::environment}'}" # lint:ignore:top_scope_facts
+    and facts.agent_specified_environment = '${facts['agent_specified_environment']}'}"
   )
   $galera_ips_v6 = sort($galera_server_hash.map | $k, $v | { $v['facts.networking.ip6'] })
   $galera_ips_v4 = sort($galera_server_hash.map | $k, $v | { $v['facts.networking.ip'] })
