@@ -14,6 +14,6 @@ class mariadb_galera::install {
     service_name       => 'mariadb',
     managed_dirs       => false,
     manage_config_file => false,
-    require            => [Exec['apt_update'], Apt::Source['mariadb-server']];
+    require            => [Exec['apt_update'], Apt::Source['mariadb']];
   }
 }
