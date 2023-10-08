@@ -39,8 +39,10 @@ class mariadb_galera::files (
   String $galera_servers_pattern,
   Stdlib::Ip::Address $my_ip = $mariadb_galera::params::my_ip,
 ) {
-  $galera_server_hash = puppetdb_query("inventory[facts.ipaddress, facts.ipaddress6] {facts.hostname ~ '${galera_servers_pattern}' and facts.agent_specified_environment = '${::environment}'}")
-
+  $galera_server_hash = puppetdb_query(
+    "inventory[facts.ipaddress, facts.ipaddress6] {facts.hostname ~ '${galera_servers_pattern}' \
+    and facts.agent_specified_environment = '${::environment}'}"
+  )
   $galera_ips_v6 = sort($galera_server_hash.map | $k, $v | { $v['facts.ipaddress6'] })
   $galera_ips_v4 = sort($galera_server_hash.map | $k, $v | { $v['facts.ipaddress'] })
   $galera_ips_v4_string = join($galera_ips_v4, ',')

@@ -34,7 +34,10 @@ define mariadb_galera::create::extra_user (
   String $dbuser                = $name,  # do not drop DB if a user is removed
   Enum['present', 'absent', present, absent] $ensure = present,
 ) {
-  $galera_server_hash = puppetdb_query("inventory[facts.ipaddress, facts.ipaddress6] {facts.hostname ~ '${galera_servers_pattern}' and facts.agent_specified_environment = '${::environment}'}")
+  $galera_server_hash = puppetdb_query(
+    "inventory[facts.ipaddress, facts.ipaddress6] {facts.hostname ~ '${galera_servers_pattern}' \
+    and facts.agent_specified_environment = '${::environment}'}"
+  )
   $galera_ipv4 = sort($galera_server_hash.map | $k, $v | { $v['facts.ipaddress'] })
   $galera_ipv6 = sort($galera_server_hash.map | $k, $v | { $v['facts.ipaddress6'] })
   $galera_ips = $galera_ipv4 + $galera_ipv6
