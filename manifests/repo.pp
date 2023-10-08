@@ -17,8 +17,8 @@ class mariadb_galera::repo {
       architecture => $facts['architecture'],
       notify       => Exec['apt_update'],
       require      => Apt::Key['mariadb-server', 'mariadb-tools'];
-    'mariadb-server':
-      location => 'https://dlm.mariadb.com/mariadb/repo/10.11/ubuntu/',
+    'mariadb':
+      location => 'https://mirrors.xtom.de/mariadb/repo/10.11/ubuntu',
       release  => $facts['lsbdistcodename'],
       repos    => 'main';
     'mariadb-tools':
