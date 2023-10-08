@@ -19,11 +19,11 @@ class mariadb_galera::repo {
       require      => Apt::Key['mariadb-server', 'mariadb-tools'];
     'mariadb':
       location => 'https://mirrors.xtom.de/mariadb/repo/10.11/ubuntu',
-      release  => $facts['lsbdistcodename'],
+      release  => $facts['os']['distro']['codename'],
       repos    => 'main';
     'mariadb-tools':
       location => 'http://downloads.mariadb.com/Tools/ubuntu',
-      release  => $facts['lsbdistcodename'],
+      release  => $facts['os']['distro']['codename'],
       repos    => 'main';
   }
 }
