@@ -23,4 +23,8 @@ class mariadb_galera::backup (Sensitive $backup_password) inherits mariadb_galer
     #privileges => ['USAGE', 'RELOAD', 'PROCESS', 'LOCK TABLES', 'REPLICATION CLIENT'];
     privileges => ['BINLOG MONITOR', 'LOCK TABLES', 'PROCESS', 'RELOAD'];
   }
+
+  package { 'mariabackup':
+    ensure => present,
+  }
 }
