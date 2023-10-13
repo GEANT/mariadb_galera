@@ -8,6 +8,7 @@ class mariadb_galera::params {
   $consul_service_name = "${facts['agent_specified_environment']}-mariadb-galera"
 
   $root_password = Sensitive(lookup('galera_root_password', Optional[String], 'first', 'root'))
+  $backup_password = Sensitive(lookup('galera_backup_password', String, 'first', 'backup'))
 
   # == mysqld options
   #
