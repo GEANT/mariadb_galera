@@ -1,19 +1,11 @@
 # == Class: mariadb_galera::backup
 #
-#
 # This class installs and configures MariaDB Galera Cluster.
 #
-# === Parameters
-#
-# [*backup_password*]
-#   Password for the backup user.
-#
-#
-class mariadb_galera::backup (Sensitive $backup_password) inherits mariadb_galera::params {
+class mariadb_galera::backup {
   mysql_user { 'mariabackup@localhost':
-    ensure        => present,
-    password_hash => mysql_password($backup_password.unwrap),
-    provider      => 'mysql';
+    ensure => present,
+    plugin => 'unix_socket',
   }
 
   -> mysql_grant { 'mariabackup@localhost/*.*':
