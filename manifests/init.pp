@@ -78,8 +78,5 @@ class mariadb_galera (
     root_password => Sensitive($root_password),
     require       => Service['mariadb'];
   }
-  class { 'mariadb_galera::backup':
-    backup_password => Sensitive($backup_password),
-    require         => Mariadb_galera::Create::Root_password['root'];
-  }
+  -> class { 'mariadb_galera::backup': }
 }
