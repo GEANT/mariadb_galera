@@ -16,12 +16,10 @@ class mariadb_galera::backup (Sensitive $backup_password) inherits mariadb_galer
     provider      => 'mysql';
   }
 
-  mariadb_galera::create::grant { 'mariabackup@localhost':
+  -> mysql_grant { 'mariabackup@localhost':
     ensure     => present,
-    dbuser     => 'mariabackup',
+    user       => 'mariabackup@localhost',
     table      => '*.*',
-    privileges => ['GRANT', 'RELOAD', 'PROCESS', 'LOCK TABLES', 'REPLICATION CLIENT'],
-    source     => 'localhost',
-    require    => Mysql_user['mariabackup@localhost'];
+    privileges => ['GRANT', 'RELOAD', 'PROCESS', 'LOCK TABLES', 'REPLICATION CLIENT'];
   }
 }
