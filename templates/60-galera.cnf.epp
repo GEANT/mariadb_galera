@@ -19,6 +19,10 @@ innodb_flush_log_at_trx_commit = 0
 wsrep_node_name                = <%= $facts['hostname'] %>
 wsrep_node_address             = "<%= $my_ip %>"
 
+# SST method configuration
+wsrep_sst_method = mariabackup
+wsrep_sst_auth = mariabackup:
+
 # By default, MariaDB error logs are sent to journald, which can be hard to digest sometimes.
 # The following line will save error messages to a plain file. 
 log_error = /var/log/mysql/error.log
