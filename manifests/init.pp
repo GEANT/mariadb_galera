@@ -17,9 +17,6 @@
 # [*consul_service_name*]
 #   The name of the consul service to use for discovery.
 #
-# [*backup_password*]
-#   The password to use for the backup user.
-#
 # [*innodb_buffer_pool_size_percent*]
 #   The percentage of the system memory to use for the innodb buffer pool.
 #
@@ -43,7 +40,6 @@ class mariadb_galera (
   Boolean $consul_enabled            = $mariadb_galera::params::consul_enabled,
   Sensitive $root_password           = $mariadb_galera::params::root_password,
   String $consul_service_name        = $mariadb_galera::params::consul_service_name,
-  Sensitive $backup_password         = $mariadb_galera::params::backup_password,
 
   # Innodb Options
   String $innodb_flush_method        = $mariadb_galera::params::innodb_flush_method,
