@@ -11,7 +11,7 @@
 #
 # * Basic Settings
 #
-
+skip-name-resolve
 user                    = mysql
 pid-file                = /run/mysqld/mysqld.pid
 basedir                 = /usr
