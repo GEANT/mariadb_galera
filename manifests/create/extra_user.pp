@@ -7,9 +7,6 @@
 # [*dbpass*]
 #   Password for the user
 #
-# [*database*]
-#   Database name
-#
 # [*galera_servers_pattern*]
 #   Pattern to match galera servers
 #
@@ -27,7 +24,6 @@
 #
 define mariadb_galera::create::extra_user (
   Sensitive $dbpass,
-  String $database,
   String $galera_servers_pattern,
   Array $privileges             = ['SELECT'],
   Variant[Array, String] $table = '*.*',  # Example: 'schema.table', 'schema.*', '*.*'
