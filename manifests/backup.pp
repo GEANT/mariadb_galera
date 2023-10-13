@@ -20,6 +20,6 @@ class mariadb_galera::backup (Sensitive $backup_password) inherits mariadb_galer
     ensure     => present,
     user       => 'mariabackup@localhost',
     table      => '*.*',
-    privileges => ['GRANT', 'RELOAD', 'PROCESS', 'LOCK TABLES', 'REPLICATION CLIENT'];
+    privileges => ['USAGE', 'RELOAD', 'PROCESS', 'LOCK TABLES', 'REPLICATION CLIENT'];
   }
 }
