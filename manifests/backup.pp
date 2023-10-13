@@ -16,7 +16,7 @@ class mariadb_galera::backup {
     privileges => ['BINLOG MONITOR', 'LOCK TABLES', 'PROCESS', 'RELOAD'];
   }
 
-  package { 'mariabackup':
+  package { 'mariadb-backup':
     ensure => present,
   }
 }
