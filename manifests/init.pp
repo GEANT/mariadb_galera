@@ -53,13 +53,16 @@ class mariadb_galera (
   Hash $custom_server_cnf_parameters = $mariadb_galera::params::custom_server_cnf_parameters,
   Variant[String, Integer] $innodb_buffer_pool_size_percent = $mariadb_galera::params::innodb_buffer_pool_size_percent
 ) inherits mariadb_galera::params {
-  $cluster_name = "${caller_module_name} ${facts['agent_specified_environment']}"
+  class { 'mariadb_galera::repo':
+    repo_version => $repo_version,
+  }
 
-  include mariadb_galera::repo
   include mariadb_galera::install
   include mariadb_galera::services
   include mariadb_galera::create::haproxy_user
   include mariadb_galera::create::backup_user
+
+  $cluster_name = "${caller_module_name} ${facts['agent_specified_environment']}"
 
   if $consul_enabled {
     class { 'mariadb_galera::consul':
