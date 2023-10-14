@@ -56,6 +56,15 @@ class mariadb_galera::files (
   $_galera_ips_v4_space_separated = join($galera_ips_v4, ':3306 ')
   $galera_ips_v4_separated = "${_galera_ips_v4_space_separated}:3307"
 
+  if $cluster_name.length > 30 {
+    $shortened_cluster_name = cluster_name.split('')[1,30].join()
+    echo { 'The cluster name must be 30 characters or less':
+      message => "shortening the name to ${$shortened_cluster_name}",
+    }
+  } else {
+    $shortened_cluster_name = $cluster_name
+  }
+
   file {
     default:
       require => Package['mysql-server'];
