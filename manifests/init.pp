@@ -17,6 +17,9 @@
 # [*consul_service_name*]
 #   The name of the consul service to use for discovery.
 #
+# [*repo_version*]
+#   The version of the MariaDB repo to use.
+#
 # [*innodb_buffer_pool_size_percent*]
 #   The percentage of the system memory to use for the innodb buffer pool.
 #
@@ -40,6 +43,7 @@ class mariadb_galera (
   Boolean $consul_enabled            = $mariadb_galera::params::consul_enabled,
   Sensitive $root_password           = $mariadb_galera::params::root_password,
   String $consul_service_name        = $mariadb_galera::params::consul_service_name,
+  Strint $repo_version               = $mariadb_galera::params::repo_version,
 
   # Innodb Options
   String $innodb_flush_method        = $mariadb_galera::params::innodb_flush_method,
