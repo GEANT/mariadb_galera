@@ -43,11 +43,11 @@ class mariadb_galera (
   Boolean $consul_enabled            = $mariadb_galera::params::consul_enabled,
   Sensitive $root_password           = $mariadb_galera::params::root_password,
   String $consul_service_name        = $mariadb_galera::params::consul_service_name,
-  Strint $repo_version               = $mariadb_galera::params::repo_version,
+  String $repo_version               = $mariadb_galera::params::repo_version,
 
   # Innodb Options
   String $innodb_flush_method        = $mariadb_galera::params::innodb_flush_method,
-  STring $innodb_log_file_size       = $mariadb_galera::params::innodb_log_file_size,
+  String $innodb_log_file_size       = $mariadb_galera::params::innodb_log_file_size,
   Integer $max_connections           = $mariadb_galera::params::max_connections,
   Integer $thread_cache_size         = $mariadb_galera::params::thread_cache_size,
   Hash $custom_server_cnf_parameters = $mariadb_galera::params::custom_server_cnf_parameters,
