@@ -15,8 +15,4 @@ class mariadb_galera::backup {
     #privileges => ['USAGE', 'RELOAD', 'PROCESS', 'LOCK TABLES', 'REPLICATION CLIENT'];
     privileges => ['BINLOG MONITOR', 'LOCK TABLES', 'PROCESS', 'RELOAD'];
   }
-
-  package { 'mariadb-backup':
-    ensure => present,
-  }
 }

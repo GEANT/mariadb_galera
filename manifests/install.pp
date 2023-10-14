@@ -16,4 +16,8 @@ class mariadb_galera::install {
     manage_config_file => false,
     require            => [Exec['apt_update'], Apt::Source['mariadb']];
   }
+
+  -> package { 'mariadb-backup':
+    ensure => present,
+  }
 }
