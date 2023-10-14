@@ -6,7 +6,7 @@ class mariadb_galera::params {
 
   $consul_enabled = true
   $consul_service_name = "${facts['agent_specified_environment']}-mariadb-galera"
-
+  $repo_version = lookup('mariadb_galera::repo_version', String, 'first', '10.11')
   $root_password = Sensitive(lookup('galera_root_password', String, 'first', 'root'))
 
   # == mysqld options
