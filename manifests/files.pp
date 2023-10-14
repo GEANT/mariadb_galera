@@ -40,9 +40,12 @@ class mariadb_galera::files (
   Stdlib::Ip::Address $my_ip = $mariadb_galera::params::my_ip,
 ) {
   $galera_server_hash = puppetdb_query(
-    "inventory[facts.networking.ip, facts.networking.ip6] {facts.networking.hostname ~ '${galera_servers_pattern}' \
+    "inventory[facts.networking.ip, facts.networking.ip6, facts.networking.hostname] \
+    {facts.networking.hostname ~ '${galera_servers_pattern}' \
     and facts.agent_specified_environment = '${facts['agent_specified_environment']}'}"
   )
+  $galera_hostnames = sort($galera_server_hash.map | $k, $v | { $v['facts.networking.hostname'] })
+  $galera_other_hostnames = delete($galera_hostnames, $facts['networking']['hostname'])
   $galera_ips_v6 = sort($galera_server_hash.map | $k, $v | { $v['facts.networking.ip6'] })
   $galera_ips_v4 = sort($galera_server_hash.map | $k, $v | { $v['facts.networking.ip'] })
   $galera_ips_v4_string = join($galera_ips_v4, ',')
@@ -64,7 +67,9 @@ class mariadb_galera::files (
           innodb_buffer_pool_size_percent => $innodb_buffer_pool_size_percent,
           innodb_flush_method             => $innodb_flush_method,
           innodb_log_file_size            => $innodb_log_file_size,
-          max_connections                 => $max_connections
+          max_connections                 => $max_connections,
+          custom_server_cnf_parameters    => $custom_server_cnf_parameters,
+          galera_other_hostnames          => $galera_other_hostnames.join(','),
         }
       );
     '/etc/mysql/mariadb.conf.d/60-galera.cnf':
