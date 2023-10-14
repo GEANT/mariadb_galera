@@ -53,6 +53,7 @@ class mariadb_galera (
   include mariadb_galera::install
   include mariadb_galera::services
   include mariadb_galera::create::haproxy_user
+  include mariadb_galera::create::backup_user
 
   if $consul_enabled {
     class { 'mariadb_galera::consul':
@@ -74,5 +75,4 @@ class mariadb_galera (
     root_password => Sensitive($root_password),
     require       => Service['mariadb'];
   }
-  -> class { 'mariadb_galera::backup': }
 }

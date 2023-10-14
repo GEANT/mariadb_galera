@@ -23,15 +23,7 @@ class mariadb_galera::consul (String $consul_service_name) {
       },
     ],
     port    => 3306,
-    tags    => [
-      'tcp',
-      "${db_env}-traefik.enable=true",
-      "${db_env}-traefik",
-      "${db_env}-traefik.tcp.routers.${db_env}-mariadb-galera.rule=HostSNI(`*`)",
-      "${db_env}-traefik.tcp.routers.${db_env}-mariadb-galera.entrypoints=galera",
-      "${db_env}-traefik.tcp.routers.${db_env}-mariadb-galera.service=${db_env}-mariadb-galera",
-      "${db_env}-traefik.tcp.services.${db_env}-mariadb-galera.loadbalancer.server.port=3306",
-    ],
+    tags    => ['tcp'],
     require => Class['geant_consul::agent::consul'];
   }
 }
