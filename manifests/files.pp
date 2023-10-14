@@ -26,6 +26,9 @@
 # [*galera_servers_pattern*]
 #   The pattern to use to find the galera servers.
 #
+# [*cluster_name*]
+#   The name of the cluster. Defaults to "${caller_module_name} ${facts['agent_specified_environment']}".
+#
 # [*my_ip*]
 #   The IP address of the current node. Defaults to $mariadb_galera::params::my_ip.
 #
@@ -37,6 +40,7 @@ class mariadb_galera::files (
   Hash $custom_server_cnf_parameters,
   Integer $thread_cache_size,
   String $galera_servers_pattern,
+  String $cluster_name,
   Stdlib::Ip::Address $my_ip = $mariadb_galera::params::my_ip,
 ) {
   $galera_server_hash = puppetdb_query(
@@ -77,7 +81,8 @@ class mariadb_galera::files (
       content => epp(
         "${module_name}/60-galera.cnf.epp", {
           galera_ips_v4_string => $galera_ips_v4_string,
-          my_ip                => $my_ip
+          my_ip                => $my_ip,
+          cluster_name         => $cluster_name,
         }
       );
     '/etc/mysql/mariadb.cnf':

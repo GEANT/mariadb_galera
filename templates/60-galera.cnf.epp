@@ -2,7 +2,7 @@
 # Mandatory settings
 wsrep_on                 = ON
 wsrep_provider           = /usr/lib/galera/libgalera_smm.so
-wsrep_cluster_name       = "Galera Cluster <%= $caller_module_name %> <%= $facts['agent_specified_environment'] %>"
+wsrep_cluster_name       = "Galera Cluster <%= $cluster_name %>"
 wsrep_cluster_address    = "gcomm://<%= $galera_ips_v4_string %>"
 binlog_format            = row
 default_storage_engine   = InnoDB

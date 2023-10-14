@@ -49,6 +49,8 @@ class mariadb_galera (
   Hash $custom_server_cnf_parameters = $mariadb_galera::params::custom_server_cnf_parameters,
   Variant[String, Integer] $innodb_buffer_pool_size_percent = $mariadb_galera::params::innodb_buffer_pool_size_percent
 ) inherits mariadb_galera::params {
+  $cluster_name = "${caller_module_name} ${facts['agent_specified_environment']}"
+
   include mariadb_galera::repo
   include mariadb_galera::install
   include mariadb_galera::services
@@ -69,6 +71,7 @@ class mariadb_galera (
     innodb_log_file_size            => $innodb_log_file_size,
     max_connections                 => $max_connections,
     thread_cache_size               => $thread_cache_size,
+    cluster_name                    => $cluster_name,
   }
 
   mariadb_galera::create::root_password { 'root':
