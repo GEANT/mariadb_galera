@@ -4,9 +4,10 @@
 #
 class mariadb_galera::create::backup_user {
   mysql_user { 'mariabackup@localhost':
-    ensure  => present,
-    plugin  => 'unix_socket',
-    require => [Service['mariadb'], File['/root/.my.cnf']];
+    ensure        => present,
+    #plugin  => 'unix_socket',
+    password_hash => mysql_password('mariabackup'),
+    require       => [Service['mariadb'], File['/root/.my.cnf']];
   }
 
   -> mysql_grant { 'mariabackup@localhost/*.*':

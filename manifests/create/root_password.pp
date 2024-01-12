@@ -42,16 +42,24 @@ define mariadb_galera::create::root_password (
       notify  => Xinetd::Service['galerachk'],
       content => Sensitive("[client]\nuser=root\npassword=${root_password.unwrap}\n");
     '/root/bin/pw_change.sh':
-      content => Sensitive(epp("${module_name}/root_pw/pw_change.sh.epp", {
+      content => Sensitive(
+        epp("${module_name}/root_pw/pw_change.sh.epp",
+          {
             'root_cnf'      => $root_cnf,
             'root_password' => Sensitive($root_password),
-      }));
+          }
+        )
+      );
     '/root/bin/old_pw_check.sh':
       content => epp("${module_name}/root_pw/old_pw_check.sh.epp", { 'root_cnf' => $root_cnf });
     '/root/bin/new_pw_check.sh':
-      content => Sensitive(epp("${module_name}/root_pw/new_pw_check.sh.epp", {
+      content => Sensitive(
+        epp("${module_name}/root_pw/new_pw_check.sh.epp",
+          {
             'root_password' => Sensitive($root_password)
-      }));
+          }
+        )
+      );
   }
 
   if ($facts['galera_rootcnf_exist'] and $facts['galera_status'] == '200') {
