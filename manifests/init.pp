@@ -8,6 +8,9 @@
 # [*galera_servers_pattern*]
 #   The pattern to use to find the galera servers on the PuppetDB.
 #
+# [*cluster_name*]
+#   The name of the cluster. Defaults to the module name and the environment.
+#
 # [*consul_enabled*]
 #   Whether or not to use consul for discovery.
 #
@@ -40,6 +43,7 @@
 #
 class mariadb_galera (
   String $galera_servers_pattern,
+  String $cluster_name               = "${caller_module_name} ${facts['agent_specified_environment']}",
   Boolean $consul_enabled            = $mariadb_galera::params::consul_enabled,
   Sensitive $root_password           = $mariadb_galera::params::root_password,
   String $consul_service_name        = $mariadb_galera::params::consul_service_name,
@@ -51,7 +55,7 @@ class mariadb_galera (
   Integer $max_connections           = $mariadb_galera::params::max_connections,
   Integer $thread_cache_size         = $mariadb_galera::params::thread_cache_size,
   Hash $custom_server_cnf_parameters = $mariadb_galera::params::custom_server_cnf_parameters,
-  Variant[String, Integer] $innodb_buffer_pool_size_percent = $mariadb_galera::params::innodb_buffer_pool_size_percent
+  Variant[String, Integer] $innodb_buffer_pool_size_percent = $mariadb_galera::params::innodb_buffer_pool_size_percent,
 ) inherits mariadb_galera::params {
   class { 'mariadb_galera::repo':
     repo_version => $repo_version,
@@ -61,8 +65,6 @@ class mariadb_galera (
   include mariadb_galera::services
   include mariadb_galera::create::haproxy_user
   include mariadb_galera::create::backup_user
-
-  $cluster_name = "${caller_module_name} ${facts['agent_specified_environment']}"
 
   if $consul_enabled {
     class { 'mariadb_galera::consul':

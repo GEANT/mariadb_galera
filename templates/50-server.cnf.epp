@@ -11,16 +11,17 @@
 #
 # * Basic Settings
 #
-user                    = mysql
-pid-file                = /run/mysqld/mysqld.pid
-basedir                 = /usr
-datadir                 = /var/lib/mysql
-#tmpdir                  = /tmp
+user             = mysql
+pid-file         = /run/mysqld/mysqld.pid
+basedir          = /usr
+datadir          = /var/lib/mysql
+#tmpdir           = /tmp
 
 # SST configuration
 wsrep_sst_donor  = <%= $galera_other_hostnames %>
-wsrep_sst_method = mariabackup
-wsrep_sst_auth   = mariabackup:
+wsrep_sst_method = rsync
+#wsrep_sst_method = mariabackup
+#wsrep_sst_auth   = mariabackup:
 
 # Broken reverse DNS slows down connections considerably and name resolve is
 # safe to skip if there are no "host by domain name" access grants
@@ -33,7 +34,7 @@ skip-name-resolve
 #
 # * Logging and Replication
 #
-expire_logs_days        = 10
+expire_logs_days      = 10
 
 #
 # * Character sets
