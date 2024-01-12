@@ -6,6 +6,7 @@ class mariadb_galera::install {
     package_name    => 'mariadb-client-core',
     package_ensure  => present,
     bindings_enable => false,
+    require         => [Exec['apt_update'], Apt::Source['mariadb']];
   }
 
   class { 'mysql::server':
