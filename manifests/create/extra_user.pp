@@ -38,8 +38,6 @@ define mariadb_galera::create::extra_user (
   $galera_ipv6 = sort($galera_server_hash.map | $k, $v | { $v['facts.networking.ip6'] })
   $galera_ips = $galera_ipv4 + $galera_ipv6
 
-  $galera_ips = $galera_ipv4 + $galera_ipv6
-
   if $table =~ String {
     $schema_name = split($table, '[.]')[0]
   } else {
