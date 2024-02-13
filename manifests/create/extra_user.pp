@@ -39,9 +39,11 @@ define mariadb_galera::create::extra_user (
   $galera_ips = $galera_ipv4 + $galera_ipv6
 
   if $table =~ String {
-    $schema_name = split($table, '[.]')[0]
+    $schema_name = [split($table, '[.]')[0]]
+    $table_array = [$table]
   } else {
     $schema_name = $table.map |$item| { split($item, '[.]')[0] }
+    $table_array = $table
   }
 
   $galera_ips.each | $galera_ip | {
@@ -51,12 +53,12 @@ define mariadb_galera::create::extra_user (
       require       => Mysql::Db[$schema_name];
     }
     mariadb_galera::create::grant { "${galera_ip} ${dbuser}":
-      ensure     => $ensure,
-      dbuser     => $dbuser,
-      table      => $table,
-      privileges => $privileges,
-      source     => $galera_ip,
-      require    => Mysql_user["${dbuser}@${galera_ip}"];
+      ensure      => $ensure,
+      dbuser      => $dbuser,
+      table_array => $table_array,
+      privileges  => $privileges,
+      source      => $galera_ip,
+      require     => Mysql_user["${dbuser}@${galera_ip}"];
     }
   }
 }
