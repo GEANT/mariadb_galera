@@ -87,7 +87,7 @@ define mariadb_galera::create::user (
   $galera_ips.each | $galera_ip | {
     mysql_user { "${dbuser}@${galera_ip}":
       ensure        => $ensure,
-      password_hash => mysql_password($dbpass.unwrap),
+      password_hash => mysql::password($dbpass.unwrap),
       provider      => 'mysql',
       require       => Mysql::Db[$schema_array_no_stars];
     }
@@ -116,7 +116,7 @@ define mariadb_galera::create::user (
 
       mysql_user { "${dbuser}@${trusted_ip}":
         ensure        => $ensure,
-        password_hash => mysql_password($dbpass.unwrap),
+        password_hash => mysql::password($dbpass.unwrap),
         require       => Mysql::Db[$schema_array_no_stars];
       }
       -> mariadb_galera::create::grant { "${trusted_ip} ${dbuser}":
