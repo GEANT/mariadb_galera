@@ -82,6 +82,7 @@ class mariadb_galera::files (
           innodb_log_file_size            => $innodb_log_file_size,
           max_connections                 => $max_connections,
           custom_server_cnf_parameters    => $custom_server_cnf_parameters,
+          thread_cache_size               => $thread_cache_size,
           galera_other_hostnames          => $galera_other_hostnames.join(','),
         }
       );
