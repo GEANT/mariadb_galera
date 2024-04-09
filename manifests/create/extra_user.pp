@@ -49,7 +49,7 @@ define mariadb_galera::create::extra_user (
   $galera_ips.each | $galera_ip | {
     mysql_user { "${dbuser}@${galera_ip}":
       ensure        => $ensure,
-      password_hash => mysql_password($dbpass.unwrap),
+      password_hash => mysql::password($dbpass.unwrap),
       require       => Mysql::Db[$schema_name];
     }
     mariadb_galera::create::grant { "${galera_ip} ${dbuser}":
