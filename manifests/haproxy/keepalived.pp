@@ -69,8 +69,7 @@ class mariadb_galera::haproxy::keepalived (
     virtual_ipaddress          => "${vip_ipv4}/${subnet_v4}",
     virtual_ipaddress_excluded => ["${vip_ipv6}/${subnet_v6} preferred_lft 0"],
     track_script               => 'check_haproxy',
-    track_interface            => [$interface],
-    require                    => Class['geant_haproxy::keepalived::dummy_net'];
+    track_interface            => [$interface];
   }
 }
 # vim:ts=2:sw=2
