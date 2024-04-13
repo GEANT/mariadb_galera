@@ -2,7 +2,7 @@
 #
 #
 class mariadb_galera::params {
-  $my_ip = dnsquery::a($facts['networking']['fqdn'])[0]
+  $my_ipv4 = dnsquery::a($facts['networking']['fqdn'])[0]
 
   $load_balancer = 'consul'
   $vip_fqdn = undef

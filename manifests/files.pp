@@ -32,8 +32,8 @@
 # [*cluster_name*]
 #   The name of the cluster. Defaults to "${caller_module_name} ${facts['agent_specified_environment']}".
 #
-# [*my_ip*]
-#   The IP address of the current node. Defaults to $mariadb_galera::params::my_ip.
+# [*my_ipv4*]
+#   The IP address of the current node. Defaults to $mariadb_galera::params::my_ipv4.
 #
 class mariadb_galera::files (
   Variant[Integer, String] $innodb_buffer_pool_size_percent,
@@ -45,7 +45,7 @@ class mariadb_galera::files (
   String $cluster_name,
   Array[Stdlib::Ip::Address::Nosubnet] $galera_ips_v4,
   Array[String] $galera_other_hostnames,
-  Stdlib::Ip::Address $my_ip = $mariadb_galera::params::my_ip,
+  Stdlib::Ip::Address $my_ipv4 = $mariadb_galera::params::my_ipv4,
 ) {
   $galera_ips_v4_string = join($galera_ips_v4, ',')
   $_galera_ips_v4_space_separated = join($galera_ips_v4, ':3306 ')
@@ -86,7 +86,7 @@ class mariadb_galera::files (
       content => epp(
         "${module_name}/60-galera.cnf.epp", {
           galera_ips_v4_string => $galera_ips_v4_string,
-          my_ip                => $my_ip,
+          my_ipv4              => $my_ipv4,
           cluster_name         => $cluster_name,
         }
       );
