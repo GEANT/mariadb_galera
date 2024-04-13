@@ -4,10 +4,10 @@
 #
 # === Parameters
 #
-# [*repo_version*]
-#   The version of the repository to use. Defaults to '2.6'.
+# [*haproxy_repo_version*]
+#   The version of the repository to use.
 #
-class mariadb_galera::haproxy::repo (String $repo_version) {
+class mariadb_galera::haproxy::repo (String $haproxy_repo_version) {
   apt::key { 'haproxy-ppa':
     id     => 'CFFB779AADC995E4F350A060505D97A41C61B9CD',
     server => 'hkp://keyserver.ubuntu.com:80',

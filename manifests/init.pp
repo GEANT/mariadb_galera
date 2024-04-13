@@ -18,7 +18,7 @@
 #   The version of haproxy to use. Defaults to latest.
 #
 # [*haproxy_repo_version*]
-#   The version of the haproxy repo to use. Defaults to 2.8.
+#   The version of the haproxy repo to use.
 #
 # [*interface*]
 #   The network interface to use for the VIP. Defaults to 'eth0'.
