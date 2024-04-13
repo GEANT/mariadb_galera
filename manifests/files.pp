@@ -4,6 +4,9 @@
 #
 # === Parameters
 #
+# [*load_balancer*]
+#   The load balancer to use. Defaults to 'haproxy'.
+#
 # [*innodb_buffer_pool_size_percent*]
 #   The percentage of the total memory to use for the innodb_buffer_pool_size.
 #   Defaults to 0.5.
@@ -36,6 +39,7 @@
 #   The IP address of the current node. Defaults to $mariadb_galera::params::my_ipv4.
 #
 class mariadb_galera::files (
+  Enum['consul', 'haproxy'] $load_balancer,
   Variant[Integer, String] $innodb_buffer_pool_size_percent,
   String $innodb_flush_method,
   String $innodb_log_file_size,
@@ -48,8 +52,10 @@ class mariadb_galera::files (
   Stdlib::Ip::Address $my_ipv4 = $mariadb_galera::params::my_ipv4,
 ) {
   $galera_ips_v4_string = join($galera_ips_v4, ',')
-  $_galera_ips_v4_space_separated = join($galera_ips_v4, ':3306 ')
-  $galera_ips_v4_separated = "${_galera_ips_v4_space_separated}:3307"
+  $mysql_port = $load_balancer ? {
+    'consul'  => 3306,
+    'haproxy' => 3307,
+  }
 
   if $cluster_name.length > 30 {
     $shortened_cluster_name = cluster_name.split('')[1,30].join()
@@ -70,8 +76,8 @@ class mariadb_galera::files (
       source => "puppet:///modules/${module_name}/usr_bin_clustercheck";
     '/etc/mysql/mariadb.conf.d/50-server.cnf':
       notify  => Service['mariadb'],
-      content => epp(
-        "${module_name}/50-server.cnf.epp", {
+      content => epp("${module_name}/50-server.cnf.epp",
+        {
           innodb_buffer_pool_size_percent => $innodb_buffer_pool_size_percent,
           innodb_flush_method             => $innodb_flush_method,
           innodb_log_file_size            => $innodb_log_file_size,
@@ -83,8 +89,8 @@ class mariadb_galera::files (
       );
     '/etc/mysql/mariadb.conf.d/60-galera.cnf':
       notify  => Service['mariadb'],
-      content => epp(
-        "${module_name}/60-galera.cnf.epp", {
+      content => epp("${module_name}/60-galera.cnf.epp",
+        {
           galera_ips_v4_string => $galera_ips_v4_string,
           my_ipv4              => $my_ipv4,
           cluster_name         => $cluster_name,
@@ -92,7 +98,7 @@ class mariadb_galera::files (
       );
     '/etc/mysql/mariadb.cnf':
       notify => Service['mariadb'],
-      source => "puppet:///modules/${module_name}/mariadb.cnf";
+      content => epp("${module_name}/mariadb.cnf.epp", { mysql_port => $mysql_port });
     '/usr/local/bin/mysqltuner.pl':
       mode   => '0755',
       source => 'puppet:///modules/depot/mysql/mysqltuner.pl';

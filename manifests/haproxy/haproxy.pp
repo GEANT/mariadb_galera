@@ -65,7 +65,7 @@ class mariadb_galera::haproxy::haproxy (
 
   haproxy::listen { 'galera':
     bind     => {
-      ':::3307' => [],
+      ':::3306' => [],
     },
     options  => [
       'mode' => 'tcp',

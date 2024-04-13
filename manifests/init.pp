@@ -88,20 +88,23 @@ class mariadb_galera (
       consul_service_name => $consul_service_name,
     }
   } else {
-    class { 'mariadb_galera::haproxy::haproxy':
-      galera_hostnames => $galera_hostnames,
-      vip_fqdn         => $vip_fqdn,
-      haproxy_version  => $haproxy_version,
+    if $vip_fqdn =~ Undef {
+      fail('You must specify a vip_fqdn when using haproxy as the load balancer')
     }
-    class { 'mariadb_galera::haproxy::keepalived':
-      vip_fqdn => $vip_fqdn,
-    }
-    class { 'mariadb_galera::haproxy::firewall':
-      galera_other_ipv4s => $galera_other_ipv4s,
+    class {
+      'mariadb_galera::haproxy::haproxy':
+        galera_hostnames => $galera_hostnames,
+        vip_fqdn         => $vip_fqdn,
+        haproxy_version  => $haproxy_version;
+      'mariadb_galera::haproxy::keepalived':
+        vip_fqdn => $vip_fqdn;
+      'mariadb_galera::haproxy::firewall':
+        galera_other_ipv4s => $galera_other_ipv4s;
     }
   }
 
   class { 'mariadb_galera::files':
+    load_balancer                   => $load_balancer,
     galera_ips_v4                   => $galera_ips_v4,
     galera_other_hostnames          => $galera_other_hostnames,
     custom_server_cnf_parameters    => $custom_server_cnf_parameters,
