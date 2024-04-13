@@ -64,13 +64,13 @@ class mariadb_galera::haproxy::haproxy (
   }
 
   haproxy::listen { 'galera':
-    bind    => {
+    bind        => {
       ':::3306' => [],
     },
-    options => {
+    options     => [
       'httpchk' => 'GET / HTTP/1.1',
       'mode'    => 'tcp',
       'balance' => 'source',
-    } + $galera_backends_list;
+    ] + $galera_backends_list;
   }
 }
