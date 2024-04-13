@@ -24,7 +24,7 @@ class mariadb_galera::haproxy::haproxy (
 ) {
   $my_domain = $facts['networking']['domain']
   $galera_backends_list = $galera_hostnames.map |$item| {
-    { 'server' => "${item} [${dnsquery::aaaa("${item}.${my_domain}")[0]}]:${mysql_port} check port 9200 weight 1" }
+    { 'server' => "${item} ${dnsquery::a("${item}.${my_domain}")[0]}:${mysql_port} check port 9200 weight 1" }
   }
 
   class { 'haproxy':
