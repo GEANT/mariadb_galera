@@ -80,7 +80,7 @@ class mariadb_galera (
   $galera_other_hostnames = delete($galera_hostnames, $facts['networking']['hostname'])
   $galera_ips_v6 = sort($galera_server_hash.map | $k, $v | { $v['facts.networking.ip6'] })
   $galera_ips_v4 = sort($galera_server_hash.map | $k, $v | { $v['facts.networking.ip'] })
-  $galera_other_ipv4s = delete($galera_ips_v4, dnsquery::aaaa($facts['networking']['fqdn']))
+  $galera_other_ipv4s = delete($galera_ips_v4, dnsquery::aaaa($facts['networking']['fqdn'])[0])
 
   include mariadb_galera::install
   include mariadb_galera::services

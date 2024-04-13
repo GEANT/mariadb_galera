@@ -23,11 +23,10 @@ class mariadb_galera::haproxy::keepalived (
 ) {
   include "${facts['repo_prefix']}::keepalived"
 
-  $vip_ipv4 = dnsquery::a($vip_fqdn)
-  $vip_ipv6 = dnsquery::aaaa($vip_fqdn)
+  $vip_ipv4 = dnsquery::a($vip_fqdn)[0]
+  $vip_ipv6 = dnsquery::aaaa($vip_fqdn)[0]
   $subnet_v4 = $facts['networking']['interfaces'][$interface]['bindings'][0]['netmask']
   $subnet_v6 = $facts['networking']['interfaces'][$interface]['bindings6'][0]['netmask']
-  $my_ipv4 = dnsquery::a($facts['networking']['fqdn'])
 
   case $facts['networking']['hostname'] {
     /01/: {
