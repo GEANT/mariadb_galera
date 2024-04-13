@@ -7,9 +7,6 @@
 # [*galera_hostnames*]
 #   An array of hostnames of the Galera nodes.
 #
-# [*vip_fqdn*]
-#   The FQDN of the VIP.
-#
 # [*mysql_port*]
 #   The port on which MySQL is listening.
 #
@@ -18,7 +15,6 @@
 #
 class mariadb_galera::haproxy::haproxy (
   Array[Stdlib::Fqdn] $galera_hostnames,
-  Stdlib::Fqdn $vip_fqdn,
   Stdlib::Port $mysql_port,
   String $haproxy_version,
 ) {

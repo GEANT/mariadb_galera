@@ -50,10 +50,20 @@ define mariadb_galera::create::user (
   Enum['present', 'absent', present, absent] $ensure = present,
   Array[Variant[Stdlib::IP::Address, Stdlib::Fqdn, String]] $trusted_sources = [],
 ) {
-  $galera_server_hash = puppetdb_query(
-    "inventory[facts.networking.ip, facts.networking.ip6] {facts.networking.hostname ~ '${galera_servers_pattern}' \
+  $full_list = puppetdb_query(
+    "inventory[facts.networking.interfaces] {facts.networking.hostname ~ '${galera_servers_pattern}' \
     and facts.agent_specified_environment = '${facts['agent_specified_environment']}'}"
   )
+  $galera_server_hash = $full_list.map |$h| {
+    $h["facts.networking.interfaces"].map |$k, $v| {
+      if $k != 'lo' {
+        [
+          if $v['bindings'] { $v['bindings'].map |$b| { $b['address'] } },
+          if $v['bindings6'] { $v['bindings6'].map |$b| { if $b['address'] !~ /^fe80/ { $b['address'] } } },
+        ]
+      }
+    }
+  }.flatten.filter |$val| { $val =~ NotUndef }.sort
   if $vip_fqdn =~ Undef {
     $vip_ipv4 = []
     $vip_ipv6 = []
