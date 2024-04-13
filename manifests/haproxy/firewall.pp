@@ -7,7 +7,7 @@
 #   An array of the IP addresses of the other nodes in the cluster.
 #
 class mariadb_galera::haproxy::firewall (
-  Array[Stdlib::Ip::Address::Nodubnet] $galera_other_ipv4s
+  Array[Stdlib::Ip::Address::Nosubnet] $galera_other_ipv4s
 ) {
   $galera_other_ipv4s.each |$ip| {
     firewall { "200 Allow VRRP inbound from ${ip}":
