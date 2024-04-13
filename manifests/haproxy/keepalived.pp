@@ -9,8 +9,8 @@
 # [*galera_other_ipv4s*]
 #   An array of the IP addresses of the other nodes in the cluster.
 #
-# [*my_ip*]
-#   The IP address of the current node. Defaults to $mariadb_galera::params::my_ip.
+# [*my_ipv4*]
+#   The IP address of the current node. Defaults to $mariadb_galera::params::my_ipv4.
 #
 class mariadb_galera::keepalived::keepalived (
   Optional[Hash] $vip_fqdn,
