@@ -97,7 +97,8 @@ class mariadb_galera (
         vip_fqdn         => $vip_fqdn,
         haproxy_version  => $haproxy_version;
       'mariadb_galera::haproxy::keepalived':
-        vip_fqdn => $vip_fqdn;
+        vip_fqdn           => $vip_fqdn,
+        galera_other_ipv4s => $galera_other_ipv4s;
       'mariadb_galera::haproxy::firewall':
         galera_other_ipv4s => $galera_other_ipv4s;
     }
