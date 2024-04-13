@@ -109,6 +109,7 @@ class mariadb_galera (
       'mariadb_galera::haproxy::haproxy':
         galera_hostnames => $galera_hostnames,
         vip_fqdn         => $vip_fqdn,
+        mysql_port       => $mysql_port,
         haproxy_version  => $haproxy_version;
       'mariadb_galera::haproxy::keepalived':
         vip_fqdn           => $vip_fqdn,
