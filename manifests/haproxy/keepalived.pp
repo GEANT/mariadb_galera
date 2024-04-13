@@ -9,21 +9,24 @@
 # [*galera_other_ipv4s*]
 #   An array of the IP addresses of the other nodes in the cluster.
 #
+# [*interface*]
+#   The network interface to use for the VIP. Defaults to 'eth0'.
+#
 # [*my_ipv4*]
 #   The IP address of the current node. Defaults to $mariadb_galera::params::my_ipv4.
 #
 class mariadb_galera::haproxy::keepalived (
   Stdlib::Fqdn $vip_fqdn,
   Array[Stdlib::Ip::Address::Nosubnet] $galera_other_ipv4s,
+  String $interface = 'eth0',
   Stdlib::Ip::Address $my_ipv4 = $mariadb_galera::params::my_ipv4,
 ) {
   include "${facts['repo_prefix']}::keepalived"
-  include geant_haproxy::keepalived::dummy_net
 
   $vip_ipv4 = dnsquery::a($vip_fqdn)
   $vip_ipv6 = dnsquery::aaaa($vip_fqdn)
-  $subnet_v4 = $facts['networking']['interfaces']['eth0']['bindings']['netmask']
-  $subnet_v6 = $facts['networking']['interfaces']['eth0']['bindings6']['netmask']
+  $subnet_v4 = $facts['networking']['interfaces'][$interface]['bindings']['netmask']
+  $subnet_v6 = $facts['networking']['interfaces'][$interface]['bindings6']['netmask']
   $my_ipv4 = dnsquery::a($facts['networking']['fqdn'])
 
   case $facts['networking']['hostname'] {
@@ -56,7 +59,7 @@ class mariadb_galera::haproxy::keepalived (
   }
 
   keepalived::vrrp::instance { 'HAProxy':
-    interface                  => 'eth0',
+    interface                  => $interface,
     state                      => $state,
     virtual_router_id          => seeded_rand(255, "${module_name}${facts['agent_specified_environment']}") + 0,
     unicast_source_ip          => $my_ipv4,
@@ -67,7 +70,7 @@ class mariadb_galera::haproxy::keepalived (
     virtual_ipaddress          => "${vip_ipv4}/${subnet_v4}",
     virtual_ipaddress_excluded => ["${vip_ipv6}/${subnet_v6} preferred_lft 0"],
     track_script               => 'check_haproxy',
-    track_interface            => ['eth0'],
+    track_interface            => [$interface],
     require                    => Class['geant_haproxy::keepalived::dummy_net'];
   }
 }
