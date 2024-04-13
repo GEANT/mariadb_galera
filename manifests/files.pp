@@ -70,7 +70,7 @@ class mariadb_galera::files (
     default:
       require => Package['mysql-server'];
     '/etc/default/clustercheck':
-      source => "puppet:///modules/${module_name}/etc_default_clustercheck";
+      content => epp("${module_name}/etc_default_clustercheck.epp", { mysql_port => $mysql_port });
     '/usr/bin/clustercheck':
       mode   => '0755',
       source => "puppet:///modules/${module_name}/usr_bin_clustercheck";
@@ -97,7 +97,7 @@ class mariadb_galera::files (
         }
       );
     '/etc/mysql/mariadb.cnf':
-      notify => Service['mariadb'],
+      notify  => Service['mariadb'],
       content => epp("${module_name}/mariadb.cnf.epp", { mysql_port => $mysql_port });
     '/usr/local/bin/mysqltuner.pl':
       mode   => '0755',
