@@ -1,4 +1,4 @@
-# == Class: mariadb_galera::keepalived::firewall
+# == Class: mariadb_galera::haproxy::firewall
 #
 #
 # === Parameters
@@ -6,7 +6,7 @@
 # [*galera_other_ipv4s*]
 #   An array of the IP addresses of the other nodes in the cluster.
 #
-class mariadb_galera::keepalived::firewall (
+class mariadb_galera::haproxy::firewall (
   Array[Stdlib::Ip::Address::Nodubnet] $galera_other_ipv4s
 ) {
   $galera_other_ipv4s.each |$ip| {
