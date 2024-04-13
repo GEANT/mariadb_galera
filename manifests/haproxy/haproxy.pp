@@ -64,9 +64,7 @@ class mariadb_galera::haproxy::haproxy (
   }
 
   haproxy::listen { 'galera':
-    bind        => {
-      ':::3306' => [],
-    },
+    bind        => { ':::3306' => [] },
     options     => [
       'httpchk' => 'GET / HTTP/1.1',
       'mode'    => 'tcp',

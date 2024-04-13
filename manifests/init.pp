@@ -17,6 +17,9 @@
 # [*haproxy_version*]
 #   The version of haproxy to use. Defaults to latest.
 #
+# [*haproxy_repo_version*]
+#   The version of the haproxy repo to use. Defaults to 2.8.
+#
 # [*interface*]
 #   The network interface to use for the VIP. Defaults to 'eth0'.
 #
@@ -55,6 +58,7 @@ class mariadb_galera (
   String $cluster_name                     = "${caller_module_name} ${facts['agent_specified_environment']}",
   Enum['consul', 'haproxy'] $load_balancer = $mariadb_galera::params::load_balancer,
   String $haproxy_version                  = $mariadb_galera::params::haproxy_version,
+  String $haproxy_repo_version             = $mariadb_galera::params::haproxy_repo_version,
   String $interface                        = $mariadb_galera::params::interface,
   Optional[Stdlib::Fqdn] $vip_fqdn         = $mariadb_galera::params::vip_fqdn,
   Sensitive $root_password                 = $mariadb_galera::params::root_password,
@@ -96,6 +100,8 @@ class mariadb_galera (
       fail('You must specify a vip_fqdn when using haproxy as the load balancer')
     }
     class {
+      'mariadb_galera::haproxy::repo':
+        haproxy_repo_version => $haproxy_repo_version;
       'mariadb_galera::haproxy::haproxy':
         galera_hostnames => $galera_hostnames,
         vip_fqdn         => $vip_fqdn,

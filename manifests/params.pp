@@ -13,6 +13,7 @@ class mariadb_galera::params {
   #
   $vip_fqdn = undef
   $haproxy_version = 'latest'
+  $haproxy_repo_version = '2.8'
   $interface = 'eth0'
 
   # == mysqld options
