@@ -18,8 +18,9 @@ class mariadb_galera::haproxy::haproxy (
   Stdlib::Fqdn $vip_fqdn,
   String $haproxy_version,
 ) {
+  $my_domain = $facts['networking']['domain']
   $galera_backends_list = $galera_hostnames.map |$item| {
-    { 'server' => "${item} dnsquery::aaaa(${item})[0]:443 check port 9200 weight 1" }
+    { 'server' => "${item} ${dnsquery::aaaa("${item}.${my_domain}")}[0]:443 check port 9200 weight 1" }
   }
 
   class { 'haproxy':
