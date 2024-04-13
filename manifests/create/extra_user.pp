@@ -44,16 +44,8 @@ define mariadb_galera::create::extra_user (
       }
     }
   }.flatten.filter |$val| { $val =~ NotUndef }.sort
-
-  if $vip_fqdn =~ Undef {
-    $vip_ipv4 = []
-    $vip_ipv6 = []
-  } else {
-    $vip_ipv4 = dnsquery::a($vip_fqdn)[0]
-    $vip_ipv6 = dnsquery::aaaa($vip_fqdn)[0]
-  }
-  $galera_ipv4 = sort(concat($galera_server_hash.map | $k, $v | { $v['facts.networking.ip'] }, $vip_ipv4))
-  $galera_ipv6 = sort(concat($galera_server_hash.map | $k, $v | { $v['facts.networking.ip6'] }, $vip_ipv6))
+  $galera_ipv4 = sort($galera_server_hash.map | $k, $v | { $v['facts.networking.ip'] })
+  $galera_ipv6 = sort($galera_server_hash.map | $k, $v | { $v['facts.networking.ip6'] })
   $galera_ips = $galera_ipv4 + $galera_ipv6
 
   if $table =~ String {

@@ -10,9 +10,6 @@
 # [*galera_servers_pattern*]
 #   Pattern to match the galera servers.
 #
-# [*vip_fqdn*]
-#   The FQDN of the VIP.
-#
 # [*privileges*]
 #   Privileges to grant to the user.
 #
@@ -40,7 +37,6 @@
 define mariadb_galera::create::user (
   Sensitive $dbpass,
   String $galera_servers_pattern,
-  Optional[Stdlib::Fqdn] $vip_fqdn = undef,
   Array $privileges                = ['SELECT'],
   Variant[Array, String] $table    = '*.*',  # Example: 'schema.table', 'schema.*', '*.*'
   String  $dbuser                  = $name,
@@ -64,15 +60,8 @@ define mariadb_galera::create::user (
       }
     }
   }.flatten.filter |$val| { $val =~ NotUndef }.sort
-  if $vip_fqdn =~ Undef {
-    $vip_ipv4 = []
-    $vip_ipv6 = []
-  } else {
-    $vip_ipv4 = dnsquery::a($vip_fqdn)[0]
-    $vip_ipv6 = dnsquery::aaaa($vip_fqdn)[0]
-  }
-  $galera_ipv4 = sort(concat($galera_server_hash.map | $k, $v | { $v['facts.networking.ip'] }, $vip_ipv4))
-  $galera_ipv6 = sort(concat($galera_server_hash.map | $k, $v | { $v['facts.networking.ip6'] }, $vip_ipv6))
+  $galera_ipv4 = sort($galera_server_hash.map | $k, $v | { $v['facts.networking.ip'] })
+  $galera_ipv6 = sort($galera_server_hash.map | $k, $v | { $v['facts.networking.ip6'] })
   $galera_ips = concat($galera_ipv4, $galera_ipv6)
 
   if $table =~ String {
