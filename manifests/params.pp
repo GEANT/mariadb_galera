@@ -4,7 +4,9 @@
 class mariadb_galera::params {
   $my_ip = dnsquery::a($facts['networking']['fqdn'])[0]
 
-  $consul_enabled = true
+  $load_balancer = 'consul'
+  $vip_fqdn = undef
+  $haproxy_version = 'latest'
   $consul_service_name = "${facts['agent_specified_environment']}-mariadb-galera"
   $repo_version = lookup('mariadb_repo_version', String, 'first', '10.11')
   $root_password = Sensitive(lookup('galera_root_password', String, 'first', 'root'))

@@ -11,8 +11,14 @@
 # [*cluster_name*]
 #   The name of the cluster. Defaults to the module name and the environment.
 #
-# [*consul_enabled*]
-#   Whether or not to use consul for discovery.
+# [*load_balancer*]
+#   The load balancer to use. Defaults to 'haproxy'.
+#
+# [*haproxy_version*]
+#   The version of haproxy to use. Defaults to latest.
+#
+# [*vip_fqdn*]
+#   The FQDN of the VIP to use. Defaults to undef.
 #
 # [*root_password*]
 #   The root password for the database.
@@ -43,37 +49,61 @@
 #
 class mariadb_galera (
   String $galera_servers_pattern,
-  String $cluster_name               = "${caller_module_name} ${facts['agent_specified_environment']}",
-  Boolean $consul_enabled            = $mariadb_galera::params::consul_enabled,
-  Sensitive $root_password           = $mariadb_galera::params::root_password,
-  String $consul_service_name        = $mariadb_galera::params::consul_service_name,
-  String $repo_version               = $mariadb_galera::params::repo_version,
+  String $cluster_name                     = "${caller_module_name} ${facts['agent_specified_environment']}",
+  Enum['consul', 'haproxy'] $load_balancer = $mariadb_galera::params::load_balancer,
+  String $haproxy_version                  = $mariadb_galera::params::haproxy_version,
+  Optional[Stdlib::Fqdn] $vip_fqdn         = $mariadb_galera::params::vip_fqdn,
+  Sensitive $root_password                 = $mariadb_galera::params::root_password,
+  String $consul_service_name              = $mariadb_galera::params::consul_service_name,
+  String $repo_version                     = $mariadb_galera::params::repo_version,
 
   # Innodb Options
-  String $innodb_flush_method        = $mariadb_galera::params::innodb_flush_method,
-  String $innodb_log_file_size       = $mariadb_galera::params::innodb_log_file_size,
-  Integer $max_connections           = $mariadb_galera::params::max_connections,
-  Integer $thread_cache_size         = $mariadb_galera::params::thread_cache_size,
-  Hash $custom_server_cnf_parameters = $mariadb_galera::params::custom_server_cnf_parameters,
+  String $innodb_flush_method              = $mariadb_galera::params::innodb_flush_method,
+  String $innodb_log_file_size             = $mariadb_galera::params::innodb_log_file_size,
+  Integer $max_connections                 = $mariadb_galera::params::max_connections,
+  Integer $thread_cache_size               = $mariadb_galera::params::thread_cache_size,
+  Hash $custom_server_cnf_parameters       = $mariadb_galera::params::custom_server_cnf_parameters,
   Variant[String, Integer] $innodb_buffer_pool_size_percent = $mariadb_galera::params::innodb_buffer_pool_size_percent,
 ) inherits mariadb_galera::params {
-  class { 'mariadb_galera::repo':
-    repo_version => $repo_version,
-  }
+  class { 'mariadb_galera::repo': repo_version => $repo_version, }
+
+  $galera_server_hash = puppetdb_query(
+    "inventory[facts.networking.ip, facts.networking.ip6, facts.networking.hostname] \
+    {facts.networking.hostname ~ '${galera_servers_pattern}' \
+    and facts.agent_specified_environment = '${facts['agent_specified_environment']}'}"
+  )
+  $galera_hostnames = sort($galera_server_hash.map | $k, $v | { $v['facts.networking.hostname'] })
+  $galera_other_hostnames = delete($galera_hostnames, $facts['networking']['hostname'])
+  $galera_ips_v6 = sort($galera_server_hash.map | $k, $v | { $v['facts.networking.ip6'] })
+  $galera_ips_v4 = sort($galera_server_hash.map | $k, $v | { $v['facts.networking.ip'] })
+  $galera_other_ipv4s = delete($galera_ips_v4, dnsquery::aaaa($facts['networking']['fqdn']))
 
   include mariadb_galera::install
   include mariadb_galera::services
   include mariadb_galera::create::haproxy_user
   include mariadb_galera::create::backup_user
 
-  if $consul_enabled {
+  if $load_balancer == 'consul' {
     class { 'mariadb_galera::consul':
       consul_service_name => $consul_service_name,
+    }
+  } else {
+    class { 'mariadb_galera::haproxy::haproxy':
+      galera_hostnames => $galera_hostnames,
+      vip_fqdn         => $vip_fqdn,
+      haproxy_version  => $haproxy_version,
+    }
+    class { 'mariadb_galera::haproxy::keepalived':
+      vip_fqdn => $vip_fqdn,
+    }
+    class { 'mariadb_galera::haproxy::firewall':
+      galera_other_ipv4s => $galera_other_ipv4s,
     }
   }
 
   class { 'mariadb_galera::files':
-    galera_servers_pattern          => $galera_servers_pattern,
+    galera_ips_v4                   => $galera_ips_v4,
+    galera_other_hostnames          => $galera_other_hostnames,
     custom_server_cnf_parameters    => $custom_server_cnf_parameters,
     innodb_buffer_pool_size_percent => $innodb_buffer_pool_size_percent,
     innodb_flush_method             => $innodb_flush_method,

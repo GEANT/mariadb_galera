@@ -23,8 +23,11 @@
 # [*thread_cache_size*]
 #   The thread_cache_size to use. Defaults to 16.
 #
-# [*galera_servers_pattern*]
-#   The pattern to use to find the galera servers.
+# [*galera_ips_v4*]
+#   An array of the IP addresses of nodes in the cluster.
+#
+# [*galera_other_hostnames*]
+#   An array of the hostnames of the other nodes in the cluster.
 #
 # [*cluster_name*]
 #   The name of the cluster. Defaults to "${caller_module_name} ${facts['agent_specified_environment']}".
@@ -39,19 +42,11 @@ class mariadb_galera::files (
   Integer $max_connections,
   Hash $custom_server_cnf_parameters,
   Integer $thread_cache_size,
-  String $galera_servers_pattern,
   String $cluster_name,
+  String[Stdlib::Ip::Address::Nosubnet] $galera_ips_v4,
+  Array[String] $galera_other_hostnames,
   Stdlib::Ip::Address $my_ip = $mariadb_galera::params::my_ip,
 ) {
-  $galera_server_hash = puppetdb_query(
-    "inventory[facts.networking.ip, facts.networking.ip6, facts.networking.hostname] \
-    {facts.networking.hostname ~ '${galera_servers_pattern}' \
-    and facts.agent_specified_environment = '${facts['agent_specified_environment']}'}"
-  )
-  $galera_hostnames = sort($galera_server_hash.map | $k, $v | { $v['facts.networking.hostname'] })
-  $galera_other_hostnames = delete($galera_hostnames, $facts['networking']['hostname'])
-  $galera_ips_v6 = sort($galera_server_hash.map | $k, $v | { $v['facts.networking.ip6'] })
-  $galera_ips_v4 = sort($galera_server_hash.map | $k, $v | { $v['facts.networking.ip'] })
   $galera_ips_v4_string = join($galera_ips_v4, ',')
   $_galera_ips_v4_space_separated = join($galera_ips_v4, ':3306 ')
   $galera_ips_v4_separated = "${_galera_ips_v4_space_separated}:3307"
