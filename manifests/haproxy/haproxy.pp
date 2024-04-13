@@ -19,7 +19,7 @@ class mariadb_galera::haproxy::haproxy (
   String $haproxy_version,
 ) {
   $galera_backends_list = $galera_hostnames.map |$item| {
-    { 'server' => "${item} dnsquery::aaaa(${item}):443 check weight 1" }
+    { 'server' => "${item} dnsquery::aaaa(${item}):443 check port 9200 weight 1" }
   }
 
   class { 'haproxy':
@@ -68,6 +68,7 @@ class mariadb_galera::haproxy::haproxy (
       ':::3306' => [],
     },
     options  => [
+      'httpchk GET / HTTP/1.1',
       'mode' => 'tcp',
       { 'balance' => 'source' },
       { 'option' => 'tcpka' },
