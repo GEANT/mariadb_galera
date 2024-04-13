@@ -14,7 +14,7 @@
 #
 class mariadb_galera::haproxy::keepalived (
   Optional[Hash] $vip_fqdn,
-  Array[Stdlib::Ip::Address::Nodubnet] $galera_other_ipv4s,
+  Array[Stdlib::Ip::Address::Nosubnet] $galera_other_ipv4s,
   Stdlib::Ip::Address $my_ipv4 = $mariadb_galera::params::my_ipv4,
 ) {
   include "${facts['repo_prefix']}::keepalived"
