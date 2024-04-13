@@ -14,7 +14,7 @@ class mariadb_galera::haproxy::repo (String $haproxy_repo_version) {
     before => Apt::Source['haproxy-ppa'],
   }
   apt::source { 'haproxy-ppa':
-    location => "https://ppa.launchpadcontent.net/vbernat/haproxy-${repo_version}/ubuntu",
+    location => "https://ppa.launchpadcontent.net/vbernat/haproxy-${haproxy_repo_version}/ubuntu",
     release  => $facts['os']['distro']['codename'],
     repos    => 'main',
   }
