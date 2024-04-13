@@ -20,7 +20,7 @@ source /etc/default/clustercheck
 #MYSQL_USERNAME="${1-clustercheckuser}"
 #MYSQL_PASSWORD="${2-clustercheckpassword!}"
 AVAILABLE_WHEN_DONOR=${3:-0}
-ERR_FILE="${4:-/dev/null}" 
+ERR_FILE="${4:-/dev/null}"
 AVAILABLE_WHEN_READONLY=${5:-1}
 DEFAULTS_EXTRA_FILE=${6:-/etc/my.cnf}
 #Timeout exists for instances where mysqld may be hung
@@ -33,10 +33,10 @@ fi
 if [[ -n "$MYSQL_PASSWORD" ]]; then
     EXTRA_ARGS="$EXTRA_ARGS --password=${MYSQL_PASSWORD}"
 fi
-if [[ -r $DEFAULTS_EXTRA_FILE ]]; then 
+if [[ -r $DEFAULTS_EXTRA_FILE ]]; then
     MYSQL_CMDLINE="mysql --defaults-extra-file=$DEFAULTS_EXTRA_FILE -nNE --connect-timeout=$TIMEOUT \
         ${EXTRA_ARGS}"
-else 
+else
     MYSQL_CMDLINE="mysql -nNE --connect-timeout=$TIMEOUT ${EXTRA_ARGS}"
 fi
 #
@@ -47,14 +47,14 @@ WSREP_STATUS=($($MYSQL_CMDLINE -e "SHOW GLOBAL STATUS LIKE 'wsrep_%';" \
     sed -n -e '2p' -e '5p' | tr '\n' ' '))
 
 if [[ ${WSREP_STATUS[1]} == 'Primary' && (${WSREP_STATUS[0]} -eq 4 ||
-    (${WSREP_STATUS[0]} -eq 2 && $AVAILABLE_WHEN_DONOR -eq 1)) ]]; then 
+    (${WSREP_STATUS[0]} -eq 2 && $AVAILABLE_WHEN_DONOR -eq 1)) ]]; then
 
     # Check only when set to 0 to avoid latency in response.
     if [[ $AVAILABLE_WHEN_READONLY -eq 0 ]]; then
         READ_ONLY=$($MYSQL_CMDLINE -e "SHOW GLOBAL VARIABLES LIKE 'read_only';" \
             2>${ERR_FILE} | tail -1 2>>${ERR_FILE})
 
-        if [[ "${READ_ONLY}" == "ON" ]]; then 
+        if [[ "${READ_ONLY}" == "ON" ]]; then
             # Galera Cluster node local state is 'Synced', but it is in
             # read-only mode. The variable AVAILABLE_WHEN_READONLY is set to 0.
             # => return HTTP 503
