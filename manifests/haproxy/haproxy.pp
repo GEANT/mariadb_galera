@@ -70,9 +70,15 @@ class mariadb_galera::haproxy::haproxy (
   haproxy::listen { 'galera':
     bind        => { ':::3306' => [] },
     options     => [
-      #'option'  => 'tcpka',
-      #'option'  => 'mysql-check user haproxy',
-      'option'  => 'httpchk GET / HTTP/1.1',
+      {
+        'option'   => [
+          'httpchk GET / HTTP/1.1',
+        ],
+        '# option' => [
+          'tcpka',
+          'mysql-check user haproxy',
+        ],
+      },
       'mode'    => 'tcp',
       'balance' => 'source',
     ] + $galera_backends_list;
