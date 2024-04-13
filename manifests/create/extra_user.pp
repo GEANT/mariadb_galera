@@ -1,6 +1,6 @@
 # == Define: mariadb_galera::create::extra_user
 #
-# Add users to existing database
+# This define adds a user to an exiting DB on the galera cluster.
 #
 # === Parameters
 #

@@ -1,5 +1,6 @@
 # == Define: mariadb_galera::create::user
 #
+# This define creates a user and corresponding DB on the galera cluster.
 #
 # === Parameters
 #
