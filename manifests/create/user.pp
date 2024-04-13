@@ -46,11 +46,11 @@ define mariadb_galera::create::user (
   Enum['present', 'absent', present, absent] $ensure = present,
   Array[Variant[Stdlib::IP::Address, Stdlib::Fqdn, String]] $trusted_sources = [],
 ) {
-  $full_list = puppetdb_query(
+  $galera_server_hash = puppetdb_query(
     "inventory[facts.networking.interfaces] {facts.networking.hostname ~ '${galera_servers_pattern}' \
     and facts.agent_specified_environment = '${facts['agent_specified_environment']}'}"
   )
-  $galera_server_hash = $full_list.map |$h| {
+  $galera_ips = $galera_server_hash.map |$h| {
     $h["facts.networking.interfaces"].map |$k, $v| {
       if $k != 'lo' {
         [
@@ -60,9 +60,6 @@ define mariadb_galera::create::user (
       }
     }
   }.flatten.filter |$val| { $val =~ NotUndef }.sort
-  $galera_ipv4 = sort($galera_server_hash.map | $k, $v | { $v['facts.networking.ip'] })
-  $galera_ipv6 = sort($galera_server_hash.map | $k, $v | { $v['facts.networking.ip6'] })
-  $galera_ips = concat($galera_ipv4, $galera_ipv6)
 
   if $table =~ String {
     $table_array = [$table]
