@@ -43,7 +43,7 @@ class mariadb_galera::files (
   Hash $custom_server_cnf_parameters,
   Integer $thread_cache_size,
   String $cluster_name,
-  String[Stdlib::Ip::Address::Nosubnet] $galera_ips_v4,
+  Array[Stdlib::Ip::Address::Nosubnet] $galera_ips_v4,
   Array[String] $galera_other_hostnames,
   Stdlib::Ip::Address $my_ip = $mariadb_galera::params::my_ip,
 ) {
