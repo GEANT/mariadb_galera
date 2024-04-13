@@ -22,8 +22,8 @@ class mariadb_galera::haproxy::keepalived (
 
   $vip_ipv4 = dnsquery::a($vip_fqdn)
   $vip_ipv6 = dnsquery::aaaa($vip_fqdn)
-  $subnet_v4 = $facts['networking']['interfaces']['bindings']['eth0']['netmask']
-  $subnet_v6 = $facts['networking']['interfaces']['bindings6']['eth0']['netmask']
+  $subnet_v4 = $facts['networking']['interfaces']['eth0']['bindings']['netmask']
+  $subnet_v6 = $facts['networking']['interfaces']['eth0']['bindings6']['netmask']
   $my_ipv4 = dnsquery::a($facts['networking']['fqdn'])
 
   case $facts['networking']['hostname'] {
