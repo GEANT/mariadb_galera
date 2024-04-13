@@ -10,17 +10,21 @@
 # [*vip_fqdn*]
 #   The FQDN of the VIP.
 #
+# [*mysql_port*]
+#   The port on which MySQL is listening.
+#
 # [*haproxy_version*]
 #   The version of HAProxy to install.
 #
 class mariadb_galera::haproxy::haproxy (
   Array[Stdlib::Fqdn] $galera_hostnames,
   Stdlib::Fqdn $vip_fqdn,
+  Stdlib::Port $mysql_port,
   String $haproxy_version,
 ) {
   $my_domain = $facts['networking']['domain']
   $galera_backends_list = $galera_hostnames.map |$item| {
-    { 'server' => "${item} ${dnsquery::aaaa("${item}.${my_domain}")}[0]:443 check port 9200 weight 1" }
+    { 'server' => "${item} ${dnsquery::aaaa("${item}.${my_domain}")[0]}:${mysql_port} check port 9200 weight 1" }
   }
 
   class { 'haproxy':

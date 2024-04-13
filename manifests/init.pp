@@ -75,6 +75,10 @@ class mariadb_galera (
 ) inherits mariadb_galera::params {
   class { 'mariadb_galera::repo': repo_version => $repo_version, }
 
+  $mysql_port = $load_balancer ? {
+    'consul'  => 3306,
+    'haproxy' => 3307,
+  }
   $galera_server_hash = puppetdb_query(
     "inventory[facts.networking.ip, facts.networking.ip6, facts.networking.hostname] \
     {facts.networking.hostname ~ '${galera_servers_pattern}' \
@@ -126,6 +130,7 @@ class mariadb_galera (
     max_connections                 => $max_connections,
     thread_cache_size               => $thread_cache_size,
     cluster_name                    => $cluster_name,
+    mysql_port                      => $mysql_port,
   }
 
   mariadb_galera::create::root_password { 'root':
