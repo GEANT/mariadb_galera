@@ -70,11 +70,8 @@ class mariadb_galera::haproxy::haproxy (
   haproxy::listen { 'galera':
     bind        => { ':::3306' => [] },
     options     => [
-      #{
-      #  'option' => [
-      #    'httpchk GET /moodle/',
-      #  ]
-      #},
+      #'option'  => 'tcpka',
+      #'option'  => 'mysql-check user haproxy',
       'option'  => 'httpchk GET / HTTP/1.1',
       'mode'    => 'tcp',
       'balance' => 'source',
