@@ -10,6 +10,9 @@
 # [*galera_servers_pattern*]
 #   Pattern to match the galera servers.
 #
+# [*vip_fqdn*]
+#   The FQDN of the VIP.
+#
 # [*privileges*]
 #   Privileges to grant to the user.
 #
@@ -37,12 +40,13 @@
 define mariadb_galera::create::user (
   Sensitive $dbpass,
   String $galera_servers_pattern,
-  Array $privileges             = ['SELECT'],
-  Variant[Array, String] $table = '*.*',  # Example: 'schema.table', 'schema.*', '*.*'
-  String  $dbuser               = $name,
-  Boolean $force_schema_removal = false,  # do not drop DB if a user is removed
-  String $collate               = 'utf8mb3_bin',
-  String $charset               = 'utf8mb3',
+  Optional[Stdlib::Fqdn] $vip_fqdn = undef,
+  Array $privileges                = ['SELECT'],
+  Variant[Array, String] $table    = '*.*',  # Example: 'schema.table', 'schema.*', '*.*'
+  String  $dbuser                  = $name,
+  Boolean $force_schema_removal    = false,  # do not drop DB if a user is removed
+  String $collate                  = 'utf8mb3_bin',
+  String $charset                  = 'utf8mb3',
   Enum['present', 'absent', present, absent] $ensure = present,
   Array[Variant[Stdlib::IP::Address, Stdlib::Fqdn, String]] $trusted_sources = [],
 ) {
@@ -50,9 +54,16 @@ define mariadb_galera::create::user (
     "inventory[facts.networking.ip, facts.networking.ip6] {facts.networking.hostname ~ '${galera_servers_pattern}' \
     and facts.agent_specified_environment = '${facts['agent_specified_environment']}'}"
   )
-  $galera_ipv4 = sort($galera_server_hash.map | $k, $v | { $v['facts.networking.ip'] })
-  $galera_ipv6 = sort($galera_server_hash.map | $k, $v | { $v['facts.networking.ip6'] })
-  $galera_ips = $galera_ipv4 + $galera_ipv6
+  if $vip_fqdn =~ Undef {
+    $vip_ipv4 = []
+    $vip_ipv6 = []
+  } else {
+    $vip_ipv4 = dnsquery::a($vip_fqdn)[0]
+    $vip_ipv6 = dnsquery::aaaa($vip_fqdn)[0]
+  }
+  $galera_ipv4 = sort(concat($galera_server_hash.map | $k, $v | { $v['facts.networking.ip'] }), $vip_ipv4)
+  $galera_ipv6 = sort(concat($galera_server_hash.map | $k, $v | { $v['facts.networking.ip6'] }), $vip_ipv6)
+  $galera_ips = concat($galera_ipv4, $galera_ipv6)
 
   if $table =~ String {
     $table_array = [$table]

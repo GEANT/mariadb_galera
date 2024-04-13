@@ -13,6 +13,9 @@
 # [*privileges*]
 #   Privileges to grant to the user
 #
+# [*vip_fqdn*]
+#   The FQDN of the VIP.
+#
 # [*table*]
 #   Table to grant privileges on
 #
@@ -25,17 +28,25 @@
 define mariadb_galera::create::extra_user (
   Sensitive $dbpass,
   String $galera_servers_pattern,
-  Array $privileges             = ['SELECT'],
-  Variant[Array, String] $table = '*.*',  # Example: 'schema.table', 'schema.*', '*.*'
-  String $dbuser                = $name,  # do not drop DB if a user is removed
+  Optional[Stdlib::Fqdn] $vip_fqdn = undef,
+  Array $privileges                = ['SELECT'],
+  Variant[Array, String] $table    = '*.*',  # Example: 'schema.table', 'schema.*', '*.*'
+  String $dbuser                   = $name,  # do not drop DB if a user is removed
   Enum['present', 'absent', present, absent] $ensure = present,
 ) {
   $galera_server_hash = puppetdb_query(
     "inventory[facts.networking.ip, facts.networking.ip6] {facts.networking.hostname ~ '${galera_servers_pattern}' \
     and facts.agent_specified_environment = '${facts['agent_specified_environment']}'}"
   )
-  $galera_ipv4 = sort($galera_server_hash.map | $k, $v | { $v['facts.networking.ip'] })
-  $galera_ipv6 = sort($galera_server_hash.map | $k, $v | { $v['facts.networking.ip6'] })
+  if $vip_fqdn =~ Undef {
+    $vip_ipv4 = []
+    $vip_ipv6 = []
+  } else {
+    $vip_ipv4 = dnsquery::a($vip_fqdn)[0]
+    $vip_ipv6 = dnsquery::aaaa($vip_fqdn)[0]
+  }
+  $galera_ipv4 = sort(concat($galera_server_hash.map | $k, $v | { $v['facts.networking.ip'] }), $vip_ipv4)
+  $galera_ipv6 = sort(concat($galera_server_hash.map | $k, $v | { $v['facts.networking.ip6'] }), $vip_ipv6)
   $galera_ips = $galera_ipv4 + $galera_ipv6
 
   if $table =~ String {
