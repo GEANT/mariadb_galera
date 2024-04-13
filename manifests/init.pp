@@ -17,6 +17,9 @@
 # [*haproxy_version*]
 #   The version of haproxy to use. Defaults to latest.
 #
+# [*interface*]
+#   The network interface to use for the VIP. Defaults to 'eth0'.
+#
 # [*vip_fqdn*]
 #   The FQDN of the VIP to use. Defaults to undef.
 #
@@ -52,6 +55,7 @@ class mariadb_galera (
   String $cluster_name                     = "${caller_module_name} ${facts['agent_specified_environment']}",
   Enum['consul', 'haproxy'] $load_balancer = $mariadb_galera::params::load_balancer,
   String $haproxy_version                  = $mariadb_galera::params::haproxy_version,
+  String $interface                        = $mariadb_galera::params::interface,
   Optional[Stdlib::Fqdn] $vip_fqdn         = $mariadb_galera::params::vip_fqdn,
   Sensitive $root_password                 = $mariadb_galera::params::root_password,
   String $consul_service_name              = $mariadb_galera::params::consul_service_name,
@@ -98,7 +102,8 @@ class mariadb_galera (
         haproxy_version  => $haproxy_version;
       'mariadb_galera::haproxy::keepalived':
         vip_fqdn           => $vip_fqdn,
-        galera_other_ipv4s => $galera_other_ipv4s;
+        galera_other_ipv4s => $galera_other_ipv4s,
+        interface          => $interface;
       'mariadb_galera::haproxy::firewall':
         galera_other_ipv4s => $galera_other_ipv4s;
     }

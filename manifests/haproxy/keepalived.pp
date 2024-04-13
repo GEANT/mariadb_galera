@@ -13,12 +13,12 @@
 #   The network interface to use for the VIP. Defaults to 'eth0'.
 #
 # [*my_ipv4*]
-#   The IP address of the current node. Defaults to $mariadb_galera::params::my_ipv4.
+#   The IP address of the current node. Defaults to $mariadb_galera::params::my_ipv4
 #
 class mariadb_galera::haproxy::keepalived (
   Stdlib::Fqdn $vip_fqdn,
   Array[Stdlib::Ip::Address::Nosubnet] $galera_other_ipv4s,
-  String $interface            = $mariadb_galera::params::interface,
+  String $interface,
   Stdlib::Ip::Address $my_ipv4 = $mariadb_galera::params::my_ipv4,
 ) {
   include "${facts['repo_prefix']}::keepalived"
