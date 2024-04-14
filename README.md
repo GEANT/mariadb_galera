@@ -31,7 +31,7 @@ it's possible to use either `consul` or `haproxy`. They both have pros and cons.
 
 ### consul
 
-it was way easier to conceive and it's way easier to support, but the load balancing supports only `weight`, through the consul check, when the check emits a warning. _The dynamic weight adjustment is not yet implemented in this module_.
+it was easier to conceive and it's easier to support, but the load balancing supports only `weight`, using warnings in the consul check. _The dynamic weight adjustment is not yet implemented in this module_ (although it's easy to implement).
 
 On the other side, it uses DNS intensively. It this really a problem? We have a DNS working in round-robin with [dnsdist](https://dnsdist.org/)
 
@@ -57,11 +57,11 @@ mariadb_galera::create::user { $dbuser:
 
 ### haproxy
 
-haproxy requires Keepalived and a VIP address. Withhg HAProxy is possible to tweak the load-balancing algorithm.
+haproxy requires Keepalived and a VIP address. With HAProxy is possible to tweak the load-balancing algorithm.
 
 On the other side, HAProxy introduces a security problem: the client connects using the IP of the proxy, and you won't be able to limit the access based on source IP.
 
-To circumvent this issue Percona/MariaDB introduced the `proxy_protocol_networks`.
+To circumvent, and partially solve this issue Percona/MariaDB introduced the `proxy_protocol_networks`.
 
 Proxy Protocol Network is described at this URL [here](https://mariadb.com/kb/en/proxy-protocol-support/), but _it's not yet implemented in this module_.
 
