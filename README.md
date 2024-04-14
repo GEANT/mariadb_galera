@@ -1,15 +1,20 @@
 # module for app mariadb_galera
 
+## Requirements
+
+* puppet 7 or 8 (perhaps older versions of puppet work as well)
+* puppetDB
+
 ## First time setup
 
 ### remove stale files
 
-Only when you install it for the first time. This procedure should not be used in any subsequent bootstrap operation.
+Only when you install it for the first time.
 
-To bootstrap the first node you run the followings:
+To bootstrap the first node you run the followings. The command `galera_new_cluster` can be use any time you have to bootstrap the cluster. The `rm` command is a first time trick only.
 
 ```bash
-rm -f /var/lib/mysql/ibdata1 /var/lib/mysql/ib_logfile0
+rm -f /var/lib/mysql/ibdata1 /var/lib/mysql/ib_logfile0  # This command should not be used in any subsequent bootstrap operation.
 galera_new_cluster
 ```
 
@@ -26,7 +31,7 @@ it's possible to use either `consul` or `haproxy`. They both have pros and cons.
 
 ### consul
 
-it is way easier to conceive and to support, but the load balancing supports only `weight`, through the consul check, when the check emits a warning. _This is not yet implemented in this module_.
+it was way easier to conceive and it's way easier to support, but the load balancing supports only `weight`, through the consul check, when the check emits a warning. _The dynamic weight adjustment is not yet implemented in this module_.
 
 On the other side, it uses DNS intensively. It this really a problem? We have a DNS working in round-robin with [dnsdist](https://dnsdist.org/)
 
