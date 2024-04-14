@@ -3,7 +3,7 @@
 #
 # === Parameters
 #
-# [*vip_fqdn*]
+# [*haproxy_vip_fqdn*]
 #   FQDN of the VIP
 #
 # [*galera_other_ipv4s*]
@@ -16,15 +16,15 @@
 #   The IP address of the current node. Defaults to $mariadb_galera::params::my_ipv4
 #
 class mariadb_galera::haproxy::keepalived (
-  Stdlib::Fqdn $vip_fqdn,
+  Stdlib::Fqdn $haproxy_vip_fqdn,
   Array[Stdlib::Ip::Address::Nosubnet] $galera_other_ipv4s,
   String $interface,
   Stdlib::Ip::Address $my_ipv4 = $mariadb_galera::params::my_ipv4,
 ) {
   include "${facts['repo_prefix']}::keepalived"
 
-  $vip_ipv4 = dnsquery::a($vip_fqdn)[0]
-  $vip_ipv6 = dnsquery::aaaa($vip_fqdn)[0]
+  $vip_ipv4 = dnsquery::a($haproxy_vip_fqdn)[0]
+  $vip_ipv6 = dnsquery::aaaa($haproxy_vip_fqdn)[0]
   $subnet_v4 = $facts['networking']['interfaces'][$interface]['bindings'][0]['netmask']
   $subnet_v6 = $facts['networking']['interfaces'][$interface]['bindings6'][0]['netmask']
 

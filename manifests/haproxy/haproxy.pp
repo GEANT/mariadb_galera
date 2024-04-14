@@ -7,7 +7,7 @@
 # [*galera_hostnames*]
 #   An array of hostnames of the Galera nodes.
 #
-# [*vip_fqdn*]
+# [*haproxy_vip_fqdn*]
 #   The FQDN of the VIP.
 #
 # [*mysql_port*]
@@ -16,15 +16,23 @@
 # [*haproxy_version*]
 #   The version of HAProxy to install.
 #
+# [*haproxy_check_method*]
+#   The method to use for checking the health of the Galera nodes. Valid values are 'xinetd_check' and 'mysql_check'.
+#
 class mariadb_galera::haproxy::haproxy (
   Array[Stdlib::Fqdn] $galera_hostnames,
-  Stdlib::Fqdn $vip_fqdn,
+  Stdlib::Fqdn $haproxy_vip_fqdn,
   Stdlib::Port $mysql_port,
   String $haproxy_version,
+  Enum['xinetd', 'mysql'] $haproxy_check_method,
 ) {
   $my_domain = $facts['networking']['domain']
+  $check_port = $haproxy_check_method ? {
+    'xinetd' => 'port 9200 ',
+    'mysql'  => '',
+  }
   $galera_backends_list = $galera_hostnames.map |$item| {
-    { 'server' => "${item} ${dnsquery::a("${item}.${my_domain}")[0]}:${mysql_port} check port 9200 weight 1" }
+    { 'server' => "${item} ${dnsquery::a("${item}.${my_domain}")[0]}:${mysql_port} check ${check_port}weight 1" }
   }
 
   class { 'haproxy':
@@ -67,17 +75,16 @@ class mariadb_galera::haproxy::haproxy (
   errorfile 504 /etc/haproxy/errors/504.http";
   }
 
+  # if we want to use mysql-check, we need to remove "port 9200" from the server line
+  $check_option = $haproxy_check_method ? {
+    'xinetd' => ['httpchk GET / HTTP/1.1'],
+    'mysql'  => ['tcpka', 'mysql-check user haproxy'],
+  }
   haproxy::listen { 'galera':
     bind        => { ':::3306' => [] },
     options     => [
       {
-        'option'   => [
-          'httpchk GET / HTTP/1.1',
-        ],
-        '# option' => [
-          'tcpka',
-          'mysql-check user haproxy',
-        ],
+        'option'   => $check_option,
       },
       'mode'    => 'tcp',
       'balance' => 'source',

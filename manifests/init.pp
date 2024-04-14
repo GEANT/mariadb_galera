@@ -23,7 +23,7 @@
 # [*interface*]
 #   The network interface to use for the VIP. Defaults to 'eth0'.
 #
-# [*vip_fqdn*]
+# [*haproxy_vip_fqdn*]
 #   The FQDN of the VIP to use. Defaults to undef.
 #
 # [*root_password*]
@@ -34,6 +34,9 @@
 #
 # [*repo_version*]
 #   The version of the MariaDB repo to use.
+#
+# [*haproxy_check_method*]
+#   The method to use for checking the health of the Galera nodes. Valid values are 'xinetd_check' and 'mysql_check'.
 #
 # [*innodb_buffer_pool_size_percent*]
 #   The percentage of the system memory to use for the innodb buffer pool.
@@ -55,22 +58,23 @@
 #
 class mariadb_galera (
   String $galera_servers_pattern,
-  String $cluster_name                     = "${caller_module_name} ${facts['agent_specified_environment']}",
-  Enum['consul', 'haproxy'] $load_balancer = $mariadb_galera::params::load_balancer,
-  String $haproxy_version                  = $mariadb_galera::params::haproxy_version,
-  String $haproxy_repo_version             = $mariadb_galera::params::haproxy_repo_version,
-  String $interface                        = $mariadb_galera::params::interface,
-  Optional[Stdlib::Fqdn] $vip_fqdn         = $mariadb_galera::params::vip_fqdn,
-  Sensitive $root_password                 = $mariadb_galera::params::root_password,
-  String $consul_service_name              = $mariadb_galera::params::consul_service_name,
-  String $repo_version                     = $mariadb_galera::params::repo_version,
+  String $cluster_name                          = "${caller_module_name} ${facts['agent_specified_environment']}",
+  Enum['consul', 'haproxy'] $load_balancer      = $mariadb_galera::params::load_balancer,
+  String $haproxy_version                       = $mariadb_galera::params::haproxy_version,
+  String $haproxy_repo_version                  = $mariadb_galera::params::haproxy_repo_version,
+  Enum['xinetd', 'mysql'] $haproxy_check_method = $mariadb_galera::params::haproxy_check_method,
+  String $interface                             = $mariadb_galera::params::interface,
+  Optional[Stdlib::Fqdn] $haproxy_vip_fqdn      = $mariadb_galera::params::haproxy_vip_fqdn,
+  Sensitive $root_password                      = $mariadb_galera::params::root_password,
+  String $consul_service_name                   = $mariadb_galera::params::consul_service_name,
+  String $repo_version                          = $mariadb_galera::params::repo_version,
 
   # Innodb Options
-  String $innodb_flush_method              = $mariadb_galera::params::innodb_flush_method,
-  String $innodb_log_file_size             = $mariadb_galera::params::innodb_log_file_size,
-  Integer $max_connections                 = $mariadb_galera::params::max_connections,
-  Integer $thread_cache_size               = $mariadb_galera::params::thread_cache_size,
-  Hash $custom_server_cnf_parameters       = $mariadb_galera::params::custom_server_cnf_parameters,
+  String $innodb_flush_method        = $mariadb_galera::params::innodb_flush_method,
+  String $innodb_log_file_size       = $mariadb_galera::params::innodb_log_file_size,
+  Integer $max_connections           = $mariadb_galera::params::max_connections,
+  Integer $thread_cache_size         = $mariadb_galera::params::thread_cache_size,
+  Hash $custom_server_cnf_parameters = $mariadb_galera::params::custom_server_cnf_parameters,
   Variant[String, Integer] $innodb_buffer_pool_size_percent = $mariadb_galera::params::innodb_buffer_pool_size_percent,
 ) inherits mariadb_galera::params {
   class { 'mariadb_galera::repo': repo_version => $repo_version, }
@@ -100,19 +104,20 @@ class mariadb_galera (
       consul_service_name => $consul_service_name,
     }
   } else {
-    if $vip_fqdn =~ Undef {
-      fail('You must specify a vip_fqdn when using haproxy as the load balancer')
+    if $haproxy_vip_fqdn =~ Undef {
+      fail('You must specify a haproxy_vip_fqdn when using haproxy as the load balancer')
     }
     class {
       'mariadb_galera::haproxy::repo':
         haproxy_repo_version => $haproxy_repo_version;
       'mariadb_galera::haproxy::haproxy':
-        galera_hostnames => $galera_hostnames,
-        vip_fqdn         => $vip_fqdn,
-        mysql_port       => $mysql_port,
-        haproxy_version  => $haproxy_version;
+        galera_hostnames     => $galera_hostnames,
+        haproxy_vip_fqdn     => $haproxy_vip_fqdn,
+        mysql_port           => $mysql_port,
+        haproxy_version      => $haproxy_version,
+        haproxy_check_method => $haproxy_check_method;
       'mariadb_galera::haproxy::keepalived':
-        vip_fqdn           => $vip_fqdn,
+        haproxy_vip_fqdn   => $haproxy_vip_fqdn,
         galera_other_ipv4s => $galera_other_ipv4s,
         interface          => $interface;
       'mariadb_galera::haproxy::firewall':

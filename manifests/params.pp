@@ -4,16 +4,17 @@
 class mariadb_galera::params {
   $my_ipv4 = dnsquery::a($facts['networking']['fqdn'])[0]
 
+  $load_balancer = 'consul'  # consul is kind of legacy, hence the default
   $consul_service_name = "${facts['agent_specified_environment']}-mariadb-galera"
   $repo_version = lookup('mariadb_repo_version', String, 'first', '10.11')
   $root_password = Sensitive(lookup('galera_root_password', String, 'first', 'root'))
-  $load_balancer = 'consul'
 
   # == haproxy options
   #
-  $vip_fqdn = undef
+  $haproxy_vip_fqdn = undef
   $haproxy_version = 'latest'
   $haproxy_repo_version = '2.8'
+  $haproxy_check_method = 'xinetd'
   $interface = 'eth0'
 
   # == mysqld options
