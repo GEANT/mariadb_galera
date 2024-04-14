@@ -100,6 +100,9 @@ class mariadb_galera (
   include mariadb_galera::create::backup_user
 
   if $load_balancer == 'consul' {
+    if $consul_service_name =~ Undef {
+      fail('You must specify a consul_service_name when using consul as the load balancer')
+    }
     class { 'mariadb_galera::consul':
       consul_service_name => $consul_service_name,
     }
