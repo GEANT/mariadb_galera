@@ -59,7 +59,7 @@ define mariadb_galera::create::user (
         ]
       }
     }
-  }.flatten.filter |$val| { $val =~ NotUndef }.sort
+  }.flatten.filter |$val| { $val =~ NotUndef }.sort.unique
 
   if $table =~ String {
     $table_array = [$table]

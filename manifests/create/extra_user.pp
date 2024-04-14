@@ -43,7 +43,7 @@ define mariadb_galera::create::extra_user (
         ]
       }
     }
-  }.flatten.filter |$val| { $val =~ NotUndef }.sort
+  }.flatten.filter |$val| { $val =~ NotUndef }.sort.unique
 
   if $table =~ String {
     $schema_name = [split($table, '[.]')[0]]
